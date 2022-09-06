@@ -1,0 +1,167 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family: "DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    "Roboto", "Noto Sans", "Ubuntu", "Droid Sans", "Helvetica Neue", sans-serif;
+}
+
+h1 {
+  font-family: "DM Sans", sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 72px;
+}
+
+.salmon {
+  color: #ff5963;
+}
+
+.salmon-border {
+  border-color: #ff5963;
+}
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* General */
+
+.container {
+  width: 100vw;
+  height: 100vh;
+  align-content: center;
+  align-self: center;
+}
+
+.flex-stretch {
+  display: flex;
+  align-items: stretch;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-content: center;
+}
+
+.flex-col {
+  display: flex;
+  flex-direction: column;
+}
+/*   Sign in Screen:  */
+
+.asana-gradient {
+  background: rgb(255, 171, 100);
+  background: linear-gradient(
+    186deg,
+    rgba(255, 171, 100, 1) 0%,
+    rgba(246, 72, 141, 1) 100%
+  );
+}
+
+.emoji-logo {
+  font-size: 4rem;
+}
+
+.connect-button {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+
+  padding: 5px 10px;
+}
+
+.signin-box {
+  margin: auto;
+  align-self: center;
+  text-align: center;
+  padding: 1.5rem;
+  background: white;
+  border-radius: 0.5rem;
+}
+
+/*   Header  */
+
+.profile-name {
+  text-wrap: none;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  margin: 0.5rem;
+}
+
+.profile-image {
+  max-height: 2rem;
+  max-width: 2rem;
+  border-radius: 50%;
+  background: #fff;
+}
+
+.head-profile {
+  display: flex;
+  font-size: 10pt;
+  align-items: center;
+}
+
+.head-profile > * {
+  margin: 3px;
+}
+
+.header-wrapper {
+  position: sticky;
+
+  z-index: 10;
+  top: 0;
+  height: 3rem;
+  width: 100vw;
+  display: grid;
+  color: black;
+  box-shadow: 0 0 0.4em rgba(37, 38, 40, 255);
+}
+
+.head-title {
+  margin-left: 3px;
+  margin-top: auto;
+  margin-bottom: auto;
+  text-align: left;
+  grid-column: 2 / 9;
+}
+
+.head-info {
+  align-content: right;
+  text-align: right;
+  align-items: center;
+  display: flex;
+  flex-direction: row-reverse;
+  grid-column: 9 / 12;
+}
+
+/* Splash Page*/
+
+.splash-container {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-template-rows: repeat(12, 1fr);
+  border: 1px solid blue;
+  width: 100%;
+  flex: 1;
+}
+
+.splash-image {
+  grid-column: 1 / 8;
+  grid-row: 1/ 13;
+  border: 1px solid black;
+}
+
+.splash-desc {
+  grid-column: 8/ 13;
+  grid-row: 1/ 13;
+  border: 1px solid black;
+  padding: 1rem;
+}

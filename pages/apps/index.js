@@ -1,0 +1,68 @@
+import { useRouter } from "next/router";
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import dynamic from "next/dynamic";
+import Image from "next/image";
+import defaultAppImage from "../../public/img/toolbox-default.png";
+
+const DynamicHeader = dynamic(() => import("../../src/components/Header"), {
+  ssr: false,
+});
+
+function Apps({}) {
+  const [pages, setPages] = useState({});
+  const router = useRouter();
+  const { all } = router.query;
+  const [App, setApp] = useState(false);
+  useEffect(() => {
+    const directory = require.context(
+      "../../common",
+      true,
+      /\.\/[\w]*?\/index\.js*?/
+    );
+    let keys = directory.keys();
+    let newPages = {};
+    for (let i = 0; i < keys.length; i++) {
+      let pathArray = keys[i].split("/");
+      let appName = pathArray[1].replace(/[A-Z]/g, " $&").trim();
+      let path = `./apps/${pathArray[1]}`;
+      console.log("obj", appName, path);
+      if (appName && path) {
+        newPages[appName] = { name: appName, path };
+      }
+    }
+    setPages(newPages);
+  }, []);
+
+  return (
+    <div className="">
+      <div className="absolute z-0  opacity-20 h-screen min-w-full bg-[length:_100%] bg-[url('/img/dotgrid.png')]"></div>
+      <DynamicHeader />
+      <div className="block p-20 px-40 m-auto max-w-5xl">
+        <h2 className="text-xl salmon">All Apps:</h2>
+        <hr className=" border-black"></hr>
+        <div className=" grid grid-cols-4 grid-flow-row my-2 gap-2 place-content-center">
+          {Object.entries(pages).map(([key, page]) => {
+            console.log(page);
+            return (
+              <div key={page.name}>
+                <Link href={page.path}>
+                  <button className="flex flex-col items-center w-full">
+                    <div className="block w-20 h-20 rounded-lg">
+                      <Image src={page.image || defaultAppImage} />
+                    </div>
+                    <div className="">{page.name}</div>
+                  </button>
+                </Link>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+Apps.auth = true;
+
+export default Apps;

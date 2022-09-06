@@ -1,0 +1,18 @@
+export const colors = {
+  red: "#F06A6A",
+  orange: "#ec8d71",
+  "orange-yellow": "#f1bd6c",
+  yellow: "#F8DF72",
+  "yellow-green": "#aecf55",
+  green: "#5da283",
+  "blue-green": "#36B8B1",
+  aqua: "#a9dcd9",
+  blue: "#4573d2",
+  indigo: "#938ce1",
+  purple: "#ad7cc4",
+  magenta: "#f4b7f4",
+  hotpink: "#e87db3",
+  pink: "#f6a0a3",
+  "cool-gray": "#6d6e6f",
+  none: "#e4e1e0",
+};
