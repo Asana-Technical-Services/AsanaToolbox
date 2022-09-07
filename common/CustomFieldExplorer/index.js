@@ -67,7 +67,7 @@ export default function SplashPage() {
     let offset = null;
 
     while (hasMore) {
-      let result = await axios.get(
+      let cfResult = await axios.get(
         `https://app.asana.com/api/1.0/workspaces/${workspaceGid}/custom_fields?opt_fields=gid,type,name,description,enum_options,created_by.(name|email)&limit=100${
           offset ? "&offset=" + offset : ""
         }`,
@@ -81,10 +81,10 @@ export default function SplashPage() {
         await sleep(2000);
       } else if (cfResult?.data?.data) {
         if (cfResult.data.next_page?.offset) {
-          let newList = newList.concat(cfResult.data.data);
+          newList = newList.concat(cfResult.data.data);
           offset = cfResult.data.next_page?.offset;
         } else {
-          let newList = currentList.concat(cfResult.data.data);
+          newList = newList.concat(cfResult.data.data);
           setCustomFields(newList);
           setCurrentFieldView(newList);
           setLoadingFields(false);
@@ -166,12 +166,9 @@ export default function SplashPage() {
                 '"'
               );
             } else if (key == "created_by_email") {
-              return (
-                '"' +
-                (cf.enum_options?.map((opt) => opt.name).join(",") || "") +
-                '"'
-              );
+              return '"' + (cf.created_by?.email || "") + '"';
             } else if (key == "created_by_name") {
+              return '"' + (cf.created_by?.email || "") + '"';
             } else {
               return '"' + cf[key] + '"';
             }
