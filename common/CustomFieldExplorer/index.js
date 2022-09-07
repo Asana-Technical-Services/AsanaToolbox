@@ -5,22 +5,11 @@ import {
   FormControl,
   InputLabel,
   MenuItem,
-  Table,
-  TableBody,
-  td,
-  Container,
-  TableContainer,
-  TableHead,
-  TableRow,
   Chip,
-  Paper,
   Skeleton,
-  TextField,
 } from "@mui/material";
 import axios from "axios";
 import { headers } from "../../next.config";
-import { selectAll } from "@testing-library/user-event/dist/types/event";
-import { selectOptions } from "@testing-library/user-event/dist/types/utility";
 
 export default function SplashPage() {
   const { data: session } = useSession();
