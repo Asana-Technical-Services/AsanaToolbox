@@ -6,7 +6,7 @@ import React from "react";
 export default function MyApp({
   Component,
   pageProps,
-}: AppProps & { Component: { auth: boolean } }) {
+}: AppProps & { Component: { auth: boolean }; pageProps: any }) {
   return (
     <SessionProvider session={pageProps.session}>
       {Component.auth ? (
