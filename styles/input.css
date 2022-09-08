@@ -89,7 +89,6 @@ a {
 /*   Header  */
 
 .profile-name {
-  text-wrap: none;
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;

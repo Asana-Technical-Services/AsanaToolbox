@@ -39,7 +39,6 @@ export default function SplashPage() {
   }, [session]);
 
   useEffect(() => {
-   
     sortFields();
   }, [sort]);
 
@@ -96,7 +95,6 @@ export default function SplashPage() {
   };
 
   const changeSort = (sortKey) => {
-    
     let currentKey = sort.key;
     let currentSortAscending = sort.asc;
 
@@ -195,7 +193,7 @@ export default function SplashPage() {
               ? "bg-gray-300 cursor-not-allowed"
               : " bg-blue-500 ")
           }
-          onClick={customFields?.length > 0 && exportToCsv}
+          onClick={customFields?.length > 0 ? exportToCsv : () => {}}
         >
           Download as CSV
         </button>
@@ -241,7 +239,7 @@ export default function SplashPage() {
               size="medium"
               aria-label="a table of all custom fields"
             >
-              <div class="table-header-group sticky top-0">
+              <div className="table-header-group sticky top-0">
                 <div className="table-row border divide-x  divide-slate-300 border-slate-300">
                   <div
                     onClick={() => {

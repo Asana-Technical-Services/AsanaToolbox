@@ -24,8 +24,7 @@ function TaskForm(props: TaskFormProps) {
 
     if (splitInputArray.length > 1) {
       finalInput = splitInputArray[splitInputArray.length - 2];
-      console.log(splitInputArray);
-      console.log(finalInput);
+    
     }
     props.setTaskId(finalInput);
   };

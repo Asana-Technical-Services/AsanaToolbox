@@ -1,8 +1,5 @@
 import { signIn, signOut, useSession } from "next-auth/react";
-import styled from "styled-components";
-import Image from "next/image";
-import { profile } from "console";
-import dynamic from "next/dynamic";
+
 import { useState, useEffect } from "react";
 //import ReactCSSTransitionGroup from "react-transition-group"; // ES6
 
@@ -32,15 +29,13 @@ export default function SplashPage() {
   const x = (-1 * (cursorPos.x - width / 2)) / 40;
   const y = (-1 * (cursorPos.y - height / 2)) / 40;
 
-  console.log(x, y);
-
   return (
-    <div className="splash-wrapper overflow-none">
+    <div className="absolute overflow-hidden h-screen w-screen">
       <div
         style={{
           transform: `translate(${String(x)}px,${String(y)}px`,
         }}
-        className="absolute  opacity-20 h-screen min-w-full bg-[length:_100%] bg-[url('/img/dotgrid.png')]"
+        className="absolute overflow-hidden opacity-20 h-screen min-w-full bg-[length:_100%] bg-[url('/img/dotgrid.png')]"
       ></div>
 
       <div

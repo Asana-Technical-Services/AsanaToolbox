@@ -1,7 +1,4 @@
 import { signIn, signOut, useSession } from "next-auth/react";
-import styled from "styled-components";
-import Image from "next/image";
-import { profile } from "console";
 import Link from "next/link";
 
 const Header = () => {
