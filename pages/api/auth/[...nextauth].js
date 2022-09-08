@@ -41,13 +41,7 @@ export default NextAuth({
       // Add access_token to the token right after sign in
       // Don't overwrite values to null or undefined when this is called on decoding an encrypted JWT
       // Initial sign in
-      console.log(account);
-      console.log(profile);
-      console.log(token);
-
-      console.log(account && profile);
-
-      console.log("now", Date.now());
+     
       if (account && profile) {
         return {
           ...token,
@@ -126,7 +120,6 @@ export default NextAuth({
  * returns the old token and an error property
  */
 async function refreshAccessToken(token) {
-  console.log("refreshing", token);
   try {
     const url =
       "https://app.asana.com/-/oauth_token?" +
@@ -138,7 +131,6 @@ async function refreshAccessToken(token) {
         code: token.refresh_token,
         refresh_token: token.refresh_token,
       });
-    console.log(url);
 
     const response = await fetch(url, {
       headers: {
@@ -147,8 +139,6 @@ async function refreshAccessToken(token) {
       method: "POST",
     });
     const refreshedTokens = await response.json();
-
-    console.log(refreshedTokens);
 
     if (!response.ok) {
       throw refreshedTokens;
@@ -161,8 +151,6 @@ async function refreshAccessToken(token) {
       refresh_token: refreshedTokens.refresh_token ?? token.refresh_token, // Fall back to old refresh token
     };
   } catch (error) {
-    console.log(error);
-
     return {
       ...token,
       error: "RefreshAccessTokenError",

@@ -7,8 +7,6 @@ export default function MyApp({
   Component,
   pageProps,
 }: AppProps & { Component: { auth: boolean } }) {
-  console.log("app!");
-  console.log(Component);
   return (
     <SessionProvider session={pageProps.session}>
       {Component.auth ? (
@@ -25,7 +23,6 @@ export default function MyApp({
 function Auth({ children }: any): any {
   const { data: session, status } = useSession();
   const isUser = !!session?.user;
-  console.log("auth!", session);
 
   React.useEffect(() => {
     // Do nothing while loading

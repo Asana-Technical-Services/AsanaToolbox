@@ -19,19 +19,14 @@ export default function SplashPage() {
 
       // for convenience, also adding "ready" as a stateful variable.
       setReady(true);
-      console.log("work");
-      console.log(workspaces);
 
       //if we haven't already, get our available workspaces
       if (workspaces?.length == 0) {
-        console.log("running axios");
         axios
           .get("https://app.asana.com/api/1.0/workspaces", {
             headers: { Authorization: `Bearer ${session.access_token}` },
           })
           .then((response) => {
-            console.log("response");
-            console.log(response.data);
             if (response?.data?.data) {
               setAvailableWorkspaces(response.data.data);
             }

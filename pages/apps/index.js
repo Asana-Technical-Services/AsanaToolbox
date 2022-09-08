@@ -26,7 +26,6 @@ function Apps({}) {
       let pathArray = keys[i].split("/");
       let appName = pathArray[1].replace(/[A-Z]/g, " $&").trim();
       let path = `./apps/${pathArray[1]}`;
-      console.log("obj", appName, path);
       if (appName && path) {
         newPages[appName] = { name: appName, path };
       }
@@ -43,7 +42,6 @@ function Apps({}) {
         <hr className=" border-black"></hr>
         <div className=" grid grid-cols-4 grid-flow-row my-2 gap-2 place-content-center">
           {Object.entries(pages).map(([key, page]) => {
-            console.log(page);
             return (
               <div key={page.name}>
                 <Link href={page.path}>

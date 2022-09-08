@@ -30,7 +30,6 @@ export default function SplashPage() {
           headers: { Authorization: `Bearer ${session?.access_token}` },
         })
         .then((newSpaces) => {
-          console.log(newSpaces);
           if (newSpaces?.data?.data) {
             setAvailableWorkspaces(newSpaces.data.data);
             setLoadingWorkspaces(false);
@@ -40,8 +39,7 @@ export default function SplashPage() {
   }, [session]);
 
   useEffect(() => {
-    console.log("sort effect");
-    console.log(sort);
+   
     sortFields();
   }, [sort]);
 
@@ -98,8 +96,7 @@ export default function SplashPage() {
   };
 
   const changeSort = (sortKey) => {
-    console.log("change sort!");
-    console.log(sort);
+    
     let currentKey = sort.key;
     let currentSortAscending = sort.asc;
 
@@ -134,7 +131,6 @@ export default function SplashPage() {
           );
         }
       });
-      console.log(newFieldsOrder[0]);
       setCurrentFieldView(newFieldsOrder);
     }
   };

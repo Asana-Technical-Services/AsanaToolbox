@@ -9,11 +9,8 @@ function App({}) {
   const router = useRouter();
   const { all } = router.query;
   const [App, setApp] = useState(false);
-  console.log("App", App);
 
   useEffect(() => {
-    console.log("effect");
-    console.log(all);
 
     if (all && all.length > 0 && all[0]) {
       const DynamicApp = dynamic(() => import(`../../common/${all[0]}/index`), {
