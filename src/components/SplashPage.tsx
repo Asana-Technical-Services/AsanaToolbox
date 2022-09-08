@@ -53,9 +53,7 @@ export default function SplashPage() {
         <p>
           to get started,
           <button
-            onClick={() =>
-              signIn("asana", { callbackUrl: "http://localhost:3000/apps" })
-            }
+            onClick={() => signIn("asana", { callbackUrl: "/apps" })}
             className="p-2 rounded-full bg-gray-50 border-2"
           >
             sign in with Asana

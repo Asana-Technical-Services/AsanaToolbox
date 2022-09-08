@@ -2,6 +2,7 @@ import "../styles/globals.css";
 import type { AppProps } from "next/app";
 import { SessionProvider, useSession, signIn } from "next-auth/react";
 import React from "react";
+import { Skeleton } from "@mui/material";
 
 export default function MyApp({
   Component,
@@ -38,5 +39,12 @@ function Auth({ children }: any): any {
 
   // Session is being fetched, or no user.
   // If no user, useEffect() will redirect.
-  return <div>Loading...</div>;
+
+  return (
+    <div className="h-screen w-full">
+      <Skeleton className="h-24 m-1 p-1" />
+
+      <Skeleton className="h-full m-1 p-1 w-full" />
+    </div>
+  );
 }

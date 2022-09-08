@@ -22,16 +22,26 @@ export default function SplashPage() {
   const [Page, setPage] = useState(0);
   const [loadingFields, setLoadingFields] = useState(false);
   const [apology, setApology] = useState(false);
+  const [failure, setFailure] = useState(false);
 
   useEffect(() => {
     if (loadingWorkspaces == true && session && session.access_token) {
       axios
-        .get("https://app.asana.com/api/1.0/workspaces", {
-          headers: { Authorization: `Bearer ${session?.access_token}` },
-        })
-        .then((newSpaces) => {
-          if (newSpaces?.data?.data) {
-            setAvailableWorkspaces(newSpaces.data.data);
+        .get(
+          "https://app.asana.com/api/1.0/users/me/workspace_memberships?opt_fields=is_guest,is_active,workspace.name,",
+          {
+            headers: { Authorization: `Bearer ${session?.access_token}` },
+          }
+        )
+        .then((space_memberships_response) => {
+          if (space_memberships_response?.data?.data?.length > 0) {
+            let full_memberships = space_memberships_response.data.data.filter(
+              (membership) => membership.is_active && !membership.is_guest
+            );
+            let spaces = full_memberships.map(
+              (membership) => membership.workspace
+            );
+            setAvailableWorkspaces(spaces);
             setLoadingWorkspaces(false);
           }
         });
@@ -55,6 +65,7 @@ export default function SplashPage() {
 
   const getCustomFieldsForWorkspace = async (workspaceGid) => {
     setLoadingFields(true);
+    setFailure(false);
     let apologyTimer = setTimeout(() => {
       setApology(true);
     }, 4000);
@@ -73,7 +84,14 @@ export default function SplashPage() {
         }
       );
 
-      if (cfResult.status == 429) {
+      if (cfResult.status == 402) {
+        setFailure(true);
+        clearTimeout(apologyTimer);
+        setLoadingFields(false);
+        setApology(false);
+        hasMore = false;
+        return;
+      } else if (cfResult.status == 429) {
         //slowing down, hit rate limits
         await sleep(2000);
       } else if (cfResult?.data?.data) {
@@ -201,7 +219,7 @@ export default function SplashPage() {
 
       <div className=" my-4">
         <FormControl fullWidth>
-          <InputLabel id="workspace-selector">Select a Workspace</InputLabel>
+          <InputLabel id="workspace-selector">Workspace</InputLabel>
           <Select
             labelId="workspace-selector"
             id="workspace-simple-select"
@@ -209,7 +227,7 @@ export default function SplashPage() {
             label="Workspaces"
             onChange={handleWorkspaceChange}
           >
-            <MenuItem value="none">select a workspace</MenuItem>
+            <MenuItem value="none">Select a workspace</MenuItem>
             {availableWorkspaces.map((space) => (
               <MenuItem value={space.gid}>{space.name}</MenuItem>
             ))}
@@ -229,8 +247,15 @@ export default function SplashPage() {
           )}
           {apology && (
             <div>
-              Sorry, this is taking longer than expected. You sure have a lot of
+              This is taking longer than expected. You sure have a lot of
               fields!
+            </div>
+          )}
+          {failure && (
+            <div>
+              {
+                "Sorry, custom Fields are not available for free users or guests. Choose another workspace."
+              }
             </div>
           )}
           {customFields?.length > 0 && (

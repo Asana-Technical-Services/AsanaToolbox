@@ -1,4 +1,6 @@
+import { osconfig } from "googleapis/build/src/apis/osconfig";
 import NextAuth from "next-auth";
+import { env } from "process";
 
 export default NextAuth({
   // Configure one or more authentication providers
@@ -41,7 +43,7 @@ export default NextAuth({
       // Add access_token to the token right after sign in
       // Don't overwrite values to null or undefined when this is called on decoding an encrypted JWT
       // Initial sign in
-     
+
       if (account && profile) {
         return {
           ...token,
@@ -75,6 +77,14 @@ export default NextAuth({
       session.error = token.error;
       return session;
     },
+
+    async redirect({ url, baseUrl }) {
+      // Allows relative callback URLs
+      if (url.startsWith("/")) return `${baseUrl}${url}`;
+      // Allows callback URLs on the same origin
+      else if (new URL(url).origin === baseUrl) return url;
+      return baseUrl;
+    },
   },
   useSecureCookies: true,
   session: {
@@ -87,16 +97,11 @@ export default NextAuth({
     // Defaults to NextAuth.js secret if not explicitly specified.
     // This is used to generate the actual signingKey and produces a warning
     // message if not defined explicitly.
-    secret: "INp8IvdIyeMcoGAgFGoA61DdBglwwSqnXJZkgz8PSnw",
+    secret: env.NEXT_JWT_SECRET,
     // You can generate a signing key using `jose newkey -s 512 -t oct -a HS512`
     // This gives you direct knowledge of the key used to sign the token so you can use it
     // to authenticate indirectly (eg. to a database driver)
-    signingKey: `{
-      "kty": "oct",
-      "kid": "9OW51e9v-W9ixVQEOC1exz05n0tVAsqYgg5ro_IC6O8",
-      "alg": "HS512",
-      "k": "M1CnZunp3ZAvj1eaqc0uHvhgAwjZ5aLCig16BBjFfTS54qz79npvNKb6huzbkpKEnzzQr8_yDH2yEp5Y9seDqw"
-    }`,
+    signingKey: env.NEXT_JWT_SIGNING_KEY,
     // If you chose something other than the default algorithm for the signingKey (HS512)
     // you also need to configure the algorithm
     verificationOptions: {
