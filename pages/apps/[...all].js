@@ -8,18 +8,13 @@ import { Skeleton } from "@mui/material";
 function App({}) {
   const router = useRouter();
   const { all } = router.query;
-  const [App, setApp] = useState(false);
-
-  useEffect(() => {
-
-    if (all && all.length > 0 && all[0]) {
-      const DynamicApp = dynamic(() => import(`../../common/${all[0]}/index`), {
-        suspense: false,
-      });
-      setApp(DynamicApp);
-    }
-  }, [all]);
-
+  const [newApp, setNewApp] = useState(false);
+  let DynamicApp = false;
+  if (all && all.length > 0 && all[0]) {
+    DynamicApp = dynamic(() => import(`../../common/${all[0]}/index`), {
+      suspense: true,
+    });
+  }
   return (
     <div className="w-full h-screen overflow-none">
       <Head>
@@ -33,7 +28,7 @@ function App({}) {
           <Suspense
             fallback={<Skeleton className="w-full h-full overflow-none" />}
           >
-            {App ? <App path={router.query} /> : "loading"}
+            {DynamicApp ? <DynamicApp path={router.query} /> : "loading"}
           </Suspense>
         </div>
       </div>

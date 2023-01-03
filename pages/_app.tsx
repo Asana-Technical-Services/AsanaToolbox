@@ -29,8 +29,7 @@ function Auth({ children }: any): any {
     // Do nothing while loading
     if (status == "loading") return;
     // If not authenticated or if we could not refresh thier access, force log in
-    if (!isUser || session?.error === "RefreshAccessTokenError" || !session)
-      signIn();
+    if (!isUser || !session) signIn();
   }, [isUser, status]);
 
   if (isUser) {

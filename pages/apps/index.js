@@ -34,10 +34,9 @@ function Apps({}) {
   }, []);
 
   return (
-    <div className="">
-      <div className="absolute z-0  opacity-20 h-screen min-w-full bg-[length:_100%] bg-[url('/img/dotgrid.png')]"></div>
+    <div className="h-screen bg-opacity-20 min-w-full bg-[length:_100%] bg-[url('/img/dotgrid.png')]">
       <DynamicHeader />
-      <div className="block p-20 px-40 m-auto max-w-5xl">
+      <div className="block p-20 px-40 m-auto z-10 max-w-5xl">
         <h2 className="text-xl salmon">All Apps:</h2>
         <hr className=" border-black"></hr>
         <div className=" grid grid-cols-4 grid-flow-row my-2 gap-2 place-content-center">

@@ -16,6 +16,7 @@ export default NextAuth({
       async profile(profile, tokens) {
         return {
           id: profile.data.gid,
+          gid: profile.data.gid,
           name: profile.data?.name,
           image: profile.data?.photo.image_128x128,
         };
@@ -51,6 +52,7 @@ export default NextAuth({
           accessTokenExpires: Date.now() + account.expires_in,
           refresh_token: account.refresh_token,
           picture: profile.data.photo.image_128x128,
+          gid: profile.data.gid,
         };
       }
 
@@ -73,6 +75,7 @@ export default NextAuth({
       // Add access_token to session
       session.access_token = token.access_token;
       session.user.name = token.name;
+      session.user.gid = token.gid;
       session.user.image = token.picture;
       session.error = token.error;
       return session;

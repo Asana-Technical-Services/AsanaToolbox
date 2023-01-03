@@ -9,7 +9,6 @@ import {
   Skeleton,
 } from "@mui/material";
 import axios from "axios";
-import { headers } from "../../next.config";
 
 export default function SplashPage() {
   const { data: session } = useSession();
