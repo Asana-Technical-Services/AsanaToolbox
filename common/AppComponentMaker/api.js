@@ -128,7 +128,20 @@ export default async (req, res) => {
         res.status(500);
       }
     } else if (route[1] == "auth") {
-      res.status(200).end();
+      res.status(200).send(`<!DOCTYPE html>)
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>You have successfully connected Asana to the app</title>
+  </head>
+  <body>
+    Success!
+    <script>
+      window.opener.postMessage("success", "https://app.asana.com");
+      window.close();
+    </script>
+  </body>
+</html>`);
       return;
     } else if (route[1] == "rule-form") {
     } else if (route[1] == "rule-submit") {
