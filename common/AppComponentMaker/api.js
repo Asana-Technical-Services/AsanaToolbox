@@ -34,7 +34,7 @@ async function applyCors(req, res, fn) {
   });
 }
 
-export default async (req, res) => {
+const api = async (req, res) => {
   let session;
   try {
     session = await getSession({ req });
@@ -65,7 +65,7 @@ export default async (req, res) => {
             console.log(error);
             res.status(500);
           }
-          res.send;
+          res.end();
           return;
         } else if (req.method == "POST") {
           console.log("post");
@@ -166,3 +166,5 @@ export default async (req, res) => {
   res.end();
   return;
 };
+
+export default api;

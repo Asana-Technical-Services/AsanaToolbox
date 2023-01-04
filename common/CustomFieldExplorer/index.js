@@ -18,13 +18,12 @@ export default function SplashPage() {
   const [customFields, setCustomFields] = useState([]);
   const [currentFieldView, setCurrentFieldView] = useState([]);
   const [sort, setSort] = useState({});
-  const [Page, setPage] = useState(0);
   const [loadingFields, setLoadingFields] = useState(false);
   const [apology, setApology] = useState(false);
   const [failure, setFailure] = useState(false);
 
   useEffect(() => {
-    if (loadingWorkspaces == true && session && session.access_token) {
+    if (loadingWorkspaces === true && session && session.access_token) {
       axios
         .get(
           "https://app.asana.com/api/1.0/users/me/workspace_memberships?opt_fields=is_guest,is_active,workspace.name,",
@@ -92,7 +91,7 @@ export default function SplashPage() {
         return;
       } else if (cfResult.status == 429) {
         //slowing down, hit rate limits
-        await sleep(2000);
+        
       } else if (cfResult?.data?.data) {
         if (cfResult.data.next_page?.offset) {
           newList = newList.concat(cfResult.data.data);
@@ -151,7 +150,7 @@ export default function SplashPage() {
   };
 
   const exportToCsv = () => {
-    headers = [
+    let headers = [
       "gid",
       "name",
       "type",
@@ -375,8 +374,8 @@ export default function SplashPage() {
 }
 
 const customFilter = (object, key, searchTerm) => {
-  if (key == "enum_options") {
-    for (option of object["enum_options"]) {
+  if (key === "enum_options") {
+    for (let option of object["enum_options"]) {
       if (option.name.contains(searchTerm)) {
         return true;
       }

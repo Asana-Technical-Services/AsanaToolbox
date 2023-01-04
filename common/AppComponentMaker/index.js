@@ -13,7 +13,7 @@ import JSONInput from "react-json-editor-ajrm";
 import CodeMirror from "@uiw/react-codemirror";
 import { json, jsonLanguage, jsonParseLinter } from "@codemirror/lang-json";
 
-export default function component() {
+export default function Component() {
   const { data: session } = useSession();
 
   // this is a variable of convenience. you can make api calls whenever this is true
@@ -174,6 +174,3 @@ const defaultJson = {
     },
   },
 };
-
-
-
