@@ -142,7 +142,7 @@ export default function Component() {
       <div>
         <details>
           <summary>Asana Dev Console Steps:</summary>
-          <ol className=" px-8 list-disc list-inside">
+          <ol className=" px-8 list-disc list-outside">
             <li>
               Navigate to{" "}
               <a
