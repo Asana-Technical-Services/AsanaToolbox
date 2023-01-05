@@ -112,6 +112,7 @@ const api = async (req, res) => {
       //
       //
     } else if (route[1] == "widget") {
+      console.log("widget");
       try {
         let item = await ddb
           .get({
@@ -121,9 +122,13 @@ const api = async (req, res) => {
             },
           })
           .promise();
+
         console.log(item.Item);
+        console.log("widget:");
+        console.log(item.Item?.config?.widget);
         res.json(item.Item?.config?.widget || {});
       } catch (error) {
+        console.log("error!");
         console.log(error);
         res.status(500);
       }
