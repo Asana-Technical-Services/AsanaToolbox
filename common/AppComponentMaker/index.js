@@ -1,33 +1,16 @@
 import { useSession } from "next-auth/react";
 import { useState, useEffect } from "react";
-import {
-  Input,
-  Skeleton,
-  FormControl,
-  InputLabel,
-  Select,
-  Button,
-  MenuItem,
-} from "@mui/material";
+import { FormControl, InputLabel, Select, MenuItem } from "@mui/material";
 import axios from "axios";
-import JSONInput from "react-json-editor-ajrm";
-import CodeMirror from "@uiw/react-codemirror";
-import { json, jsonLanguage, jsonParseLinter } from "@codemirror/lang-json";
+import ResponseEditor from "./components/ResponseEditor";
 
 export default function Component() {
   const { data: session } = useSession();
 
-  // this is a variable of convenience. you can make api calls whenever this is true
-  const [ready, setReady] = useState(false);
-
   // many requests require you to specify a workspace, so we've provided that here
   const [workspaces, setAvailableWorkspaces] = useState([]);
   const [currentWorkspace, setCurrentWorkspace] = useState();
-  const [widgetJson, setWidgetJson] = useState("");
-  const [widgetValid, setWidgetValid] = useState(true);
   const [dbRecord, setDbRecord] = useState({});
-  const [jsonError, setJsonError] = useState("");
-  const [isSaved, setIsSaved] = useState(false);
 
   useEffect(() => {
     if (session && session.access_token) {
@@ -35,7 +18,6 @@ export default function Component() {
       // sometimes the session isn't set on first render, especially if users are navigating directly to your app
 
       // for convenience, also adding "ready" as a stateful variable.
-      setReady(true);
       //if we haven't already, get our available workspaces
       if (workspaces?.length == 0) {
         axios
@@ -49,7 +31,7 @@ export default function Component() {
           });
       }
     }
-  }, [session]);
+  }, [session, workspaces.length]);
 
   const handleWorkspaceChange = async (e) => {
     if (e.target.value && e.target.value != "none") {
@@ -64,31 +46,22 @@ export default function Component() {
         let body = await resp.json();
         if (body?.config?.widget) {
           setDbRecord(body);
-          setWidgetJson(JSON.stringify(body.config.widget, null, 2));
           return;
         }
         return;
       }
     } else {
       setCurrentWorkspace("none");
-      setWidgetJson("");
       setDbRecord({});
     }
   };
 
-  const save = async () => {
-    let parsedWidget;
-    try {
-      parsedWidget = JSON.parse(widgetJson);
-    } catch (e) {
-      console.log(e.toString());
-      setJsonError("error!" + e.toString());
-      return;
-    }
-    setJsonError("");
+  const save = async (param, value) => {
     let newDbRecord = dbRecord;
 
-    newDbRecord.config = { ...dbRecord?.config, widget: parsedWidget };
+    newDbRecord.config = { ...dbRecord?.config };
+    newDbRecord.config[param] = value;
+
     let res = await fetch(
       "/api/apps/AppComponentMaker/config?user=" +
         session.user.gid +
@@ -96,20 +69,14 @@ export default function Component() {
         currentWorkspace,
       { method: "POST", body: JSON.stringify(newDbRecord) }
     );
-    if (res.ok) {
-      setIsSaved(true);
-      setTimeout(() => {
-        setIsSaved(false);
-      }, 3000);
-    }
     if (res.data) {
       setDbRecord(res.data);
-      setWidgetJson(res.data?.config?.widget);
     }
-  };
-
-  const updateWidgetJson = (e) => {
-    setWidgetJson(e);
+    if (res.ok) {
+      return true;
+    } else {
+      return false;
+    }
   };
 
   // we have Tailwind CSS https://tailwindcss.com/docs/installation
@@ -214,6 +181,36 @@ export default function Component() {
                     </ul>
                   </details>
                 </li>
+                <li>
+                  <details>
+                    <summary>
+                      <b>Rule Action:</b>
+                    </summary>
+                    <p>
+                      Add a new action and name it as you'd like, then use the
+                      following urls:
+                    </p>
+                    <ul className="list-disc list-outside px-8">
+                      <li>
+                        <b>Run action URL: </b>
+                        https://asana-toolbox.vercel.app/api/apps/AppComponentMaker/rule-run
+                      </li>
+                      <li>
+                        <b>Form metadata URL: </b>
+                        https://asana-toolbox.vercel.app/api/apps/AppComponentMaker/rule-form{" "}
+                      </li>
+                    </ul>
+                  </details>
+                </li>
+                <li>
+                  <details>
+                    <summary>
+                      <b>Modal Form:</b>
+                    </summary>
+                    <b>Form metadata URL:</b>
+                    https://asana-toolbox.vercel.app/api/apps/AppComponentMaker/form
+                  </details>
+                </li>
               </ul>
             </li>
             <li>
@@ -266,29 +263,121 @@ export default function Component() {
                   href="https://app.asana.com/0/my-apps/response-builder"
                 >
                   https://app.asana.com/0/my-apps/response-builder
-                </a>
-              </p>
-            </div>
-            <FormControl fullWidth>
-              <CodeMirror
-                id="widget-input"
-                value={widgetJson}
-                onChange={updateWidgetJson}
-                labelId="widget-entry"
-                extensions={[jsonLanguage, json()]}
-              />
-              {jsonError || ""}
-              {widgetValid && (
-                <Button
-                  onClick={save}
-                  class="w-fit px-5 py-2 m-auto bg-blue-500 text-white rounded-full"
+                </a>{" "}
+                or review the documentation at{" "}
+                <a
+                  className="text-blue-700"
+                  href="https://developers.asana.com/docs/widget-metadata"
                 >
-                  {" "}
-                  Save{" "}
-                </Button>
-              )}
-              {isSaved && <div className="bg-green-400"> Saved! </div>}
-            </FormControl>
+                  https://developers.asana.com/docs/widget-metadata
+                </a>{" "}
+              </p>
+              <ResponseEditor
+                initJson={dbRecord.config?.widget || defaultWidget}
+                param="widget"
+                save={save}
+              />
+            </div>
+            <div>
+              <b>Lookup list</b>
+              <p>
+                Edit the JSON below to configure your lookup list, then hit
+                save. This list of items will appear when the user types in the
+                box to add a resource in the task pane. You can play around with
+                a preview using the UI builder here:
+                <a
+                  className="text-blue-700"
+                  href="https://app.asana.com/0/my-apps/response-builder"
+                >
+                  https://app.asana.com/0/my-apps/response-builder
+                </a>{" "}
+                or review the documentation at{" "}
+                <a
+                  className="text-blue-700"
+                  href="https://developers.asana.com/docs/lookup"
+                >
+                  https://developers.asana.com/docs/lookup
+                </a>{" "}
+              </p>
+              <ResponseEditor
+                initJson={dbRecord.config?.lookup || defaultLookup}
+                param="lookup"
+                save={save}
+              />
+            </div>
+            <div>
+              <b>Attachment</b>
+              <p>
+                Edit the JSON below to configure your attachment name and
+                reference URL, then hit save. This will be the name of the
+                "resource" that gets attached to the task. You can review the
+                documentation at{" "}
+                <a
+                  className="text-blue-700"
+                  href="https://developers.asana.com/docs/attached-resource"
+                >
+                  https://developers.asana.com/docs/attached-resource
+                </a>{" "}
+              </p>
+              <ResponseEditor
+                initJson={dbRecord.config?.attachment || defaultAttachment}
+                param="attachment"
+                save={save}
+              />
+            </div>
+
+            <div>
+              <b>Modal Form</b>
+              <p>
+                Edit the JSON below to configure your Widget, then hit save. To
+                see a live preview, use the UI builder provided in the dev
+                console here:{" "}
+                <a
+                  className="text-blue-700"
+                  href="https://app.asana.com/0/my-apps/response-builder"
+                >
+                  https://app.asana.com/0/my-apps/response-builder
+                </a>{" "}
+                or review the documentation at{" "}
+                <a
+                  className="text-blue-700"
+                  href="https://developers.asana.com/docs/widget-metadata"
+                >
+                  https://developers.asana.com/docs/widget-metadata
+                </a>{" "}
+              </p>
+              <ResponseEditor
+                initJson={dbRecord.config?.form || defaultForm}
+                param="form"
+                save={save}
+              />
+            </div>
+            <div>
+              <b>Rule Form</b>
+              <p>
+                Edit the JSON below to configure your Widget, then hit save. To
+                see a live preview, use the UI builder provided in the dev
+                console here:{" "}
+                <a
+                  className="text-blue-700"
+                  href="https://app.asana.com/0/my-apps/response-builder"
+                >
+                  https://app.asana.com/0/my-apps/response-builder
+                </a>{" "}
+                or review the documentation at{" "}
+                <a
+                  className="text-blue-700"
+                  href="https://developers.asana.com/docs/widget-metadata"
+                >
+                  https://developers.asana.com/docs/widget-metadata
+                </a>{" "}
+              </p>
+              <ResponseEditor
+                initJson={dbRecord.config?.ruleForm || defaultRuleForm}
+                param="ruleForm"
+                save={save}
+              />
+            </div>
           </div>
         )}
       </div>
@@ -296,16 +385,17 @@ export default function Component() {
   );
 }
 
-const defaultJson = {
+const defaultWidget = {
   template: "summary_with_details_v0",
   metadata: {
     title: "My Widget",
     subtitle: "Subtitle text",
     fields: [
       {
-        name: "Text",
-        type: "text_with_icon",
+        name: "Pill",
+        type: "pill",
         text: "Some text",
+        color: "green",
       },
       {
         name: "Text",
@@ -317,6 +407,99 @@ const defaultJson = {
       footer_type: "custom_text",
       text: "Last updated today",
     },
+  },
+};
+
+const defaultLookup = {
+  header: "Items",
+  items: [
+    {
+      title: "Item title",
+      subtitle: "Item subtitle",
+      value: "searchResult1",
+      icon_url: "https://www.fillmurray.com/16/16",
+    },
+    {
+      title: "Item title",
+      subtitle: "Item subtitle",
+      value: "searchResult2",
+      icon_url: "https://www.fillmurray.com/16/16",
+    },
+    {
+      title: "Item title",
+      subtitle: "Item subtitle",
+      value: "searchResult3",
+      icon_url: "https://www.fillmurray.com/16/16",
+    },
+    {
+      title: "Item title",
+      subtitle: "Item subtitle",
+      value: "searchResult4",
+      icon_url: "https://www.fillmurray.com/16/16",
+    },
+  ],
+};
+
+const defaultAttachment = {
+  resource_name: "Build the Thing",
+  resource_url:
+    "https://asana-toolbox.vercel.app/api/apps/AppComponentMaker/attachment",
+};
+
+const defaultForm = {
+  template: "form_metadata_v0",
+  metadata: {
+    title: "create new resource",
+    on_submit_callback:
+      "https://asana-toolbox.vercel.app/api/apps/AppComponentMaker/attach",
+    fields: [
+      {
+        type: "multi_line_text",
+        id: "multi_line_text",
+        name: "Multi-line text field",
+        value: "",
+        is_required: false,
+        placeholder: "Type something...",
+      },
+      {
+        type: "checkbox",
+        id: "checkbox",
+        is_required: true,
+        options: [
+          {
+            id: "1",
+            label: "Checkbox field",
+          },
+        ],
+      },
+    ],
+  },
+};
+
+const defaultRuleForm = {
+  template: "form_metadata_v0",
+  metadata: {
+    fields: [
+      {
+        type: "multi_line_text",
+        id: "multi_line_text",
+        name: "Multi-line text field",
+        value: "",
+        is_required: false,
+        placeholder: "Type something...",
+      },
+      {
+        type: "checkbox",
+        id: "checkbox",
+        is_required: true,
+        options: [
+          {
+            id: "1",
+            label: "Checkbox field",
+          },
+        ],
+      },
+    ],
   },
 };
 // todo:

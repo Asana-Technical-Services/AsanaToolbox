@@ -46,11 +46,22 @@ const api = async (req, res) => {
   let user_gid = req?.query?.user;
   let workspace_gid = req?.query?.workspace;
 
+  let reqData = JSON.parse(req.body?.data || "{}");
+  console.log(reqData);
+  if (!user_gid) {
+    user_gid = reqData?.user;
+  }
+  if (!workspace_gid) {
+    workspace_gid = reqData?.workspace;
+  }
+
   //routes:  hi, rule-form, rule-submit,rule-run, get form, form-submit,
   if (route.length > 1) {
     if (route[1] == "config") {
       if (session && session.user.gid && session.user.gid == user_gid) {
+        console.log("here");
         if (req.method == "GET") {
+          console.log("get");
           try {
             let item = await ddb
               .get({
@@ -60,12 +71,12 @@ const api = async (req, res) => {
                 },
               })
               .promise();
+            console.log(item.Item);
             res.json(item.Item || {});
           } catch (error) {
             console.log(error);
-            res.status(500);
+            res.status(500).send();
           }
-          res.end();
           return;
         } else if (req.method == "POST") {
           console.log("post");
@@ -87,7 +98,6 @@ const api = async (req, res) => {
                   console.log("data");
                   console.log(data);
                   res.json(item);
-                  res.send();
                 }
               }
             );
@@ -96,12 +106,14 @@ const api = async (req, res) => {
           } catch (error) {
             console.log("error!");
             console.log(error);
-            res.status(500).end();
+            res.status(500).send();
           }
           return;
         }
+        console.log("unknown request");
       } else {
-        res.status(400).end();
+        res.status(400);
+        res.send();
       }
 
       //
@@ -149,19 +161,116 @@ const api = async (req, res) => {
 </html>`);
       return;
     } else if (route[1] == "rule-form") {
+      console.log("rule-form");
+      try {
+        let item = await ddb
+          .get({
+            TableName: TableName,
+            Key: {
+              userworkspace: user_gid + workspace_gid,
+            },
+          })
+          .promise();
+
+        console.log(item.Item);
+        console.log("rule-form:");
+        console.log(item.Item?.config?.ruleForm);
+        res.json(item.Item?.config?.ruleForm || {});
+      } catch (error) {
+        console.log("error!");
+        console.log(error);
+        res.status(500);
+      }
     } else if (route[1] == "rule-submit") {
+      res.status(200).send();
     } else if (route[1] == "rule-run") {
+      try {
+        let item = await ddb
+          .get({
+            TableName: TableName,
+            Key: {
+              userworkspace: user_gid + workspace_gid,
+            },
+          })
+          .promise();
+
+        console.log("rule run");
+        res.json({
+          action_result: "ok",
+          resources_created: [item.Item?.config?.attachment || {}],
+        });
+      } catch (error) {
+        console.log("error!");
+        console.log(error);
+        res.status(500).send();
+      }
     } else if (route[1] == "form") {
-    } else if (route[1] == "form-submit") {
-    } else if (route[1] == "attach") {
-      res.json({
-        resource_name: "Build the Thing",
-        resource_url:
-          "https://asana-toolbox.vercel.app/api/apps/AppComponentMaker/widget",
-      });
+      console.log("form");
+      try {
+        let item = await ddb
+          .get({
+            TableName: TableName,
+            Key: {
+              userworkspace: user_gid + workspace_gid,
+            },
+          })
+          .promise();
+
+        console.log("form:");
+        console.log(item.Item?.config?.form);
+        res.json(item.Item?.config?.form || {});
+      } catch (error) {
+        console.log("error!");
+        console.log(error);
+        res.status(500);
+      }
+    } else if (route[1] === "form-submit") {
+      res.status(200).send();
+    } else if (route[1] === "attach") {
+      console.log("attach");
+      console.log(user_gid);
+      console.log(workspace_gid);
+      console.log(req.body);
+      try {
+        let item = await ddb
+          .get({
+            TableName: TableName,
+            Key: {
+              userworkspace: `${user_gid}${workspace_gid}`,
+            },
+          })
+          .promise();
+
+        console.log("attachment:");
+        console.log(item.Item);
+        console.log(item.Item?.config?.attachment);
+        res.json(item.Item?.config?.attachment || {});
+      } catch (error) {
+        console.log("error!");
+        console.log(error);
+        res.status(500);
+      }
+    } else if (route[1] === "lookup") {
+      try {
+        let item = await ddb
+          .get({
+            TableName: TableName,
+            Key: {
+              userworkspace: user_gid + workspace_gid,
+            },
+          })
+          .promise();
+
+        console.log("lookup:");
+        console.log(item.Item?.config?.lookup);
+        res.json(item.Item?.config?.lookup || {});
+      } catch (error) {
+        console.log("error!");
+        console.log(error);
+        res.status(500);
+      }
     } else {
-      res.status(404);
-      res.end();
+      res.status(404).send();
       return;
     }
   }
