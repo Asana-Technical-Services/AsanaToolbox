@@ -479,6 +479,8 @@ const defaultForm = {
 const defaultRuleForm = {
   template: "form_metadata_v0",
   metadata: {
+    on_submit_callback:
+      "https://asana-toolbox.vercel.app/api/apps/AppComponentMaker/rule-form",
     fields: [
       {
         type: "multi_line_text",
