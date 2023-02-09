@@ -189,7 +189,7 @@ const api = async (req, res) => {
           .get({
             TableName: TableName,
             Key: {
-              userworkspace: user_gid + workspace_gid,
+              userworkspace: `${user_gid}${workspace_gid}`,
             },
           })
           .promise();
