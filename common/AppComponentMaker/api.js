@@ -195,6 +195,7 @@ const api = async (req, res) => {
           .promise();
 
         console.log("rule run");
+        console.log(item.Item?.config?.attachment);
         res.json({
           action_result: "ok",
           resources_created: [item.Item?.config?.attachment || {}],
