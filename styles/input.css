@@ -164,3 +164,24 @@ a {
   border: 1px solid black;
   padding: 1rem;
 }
+
+.red {
+  color: red;
+}
+
+.widgetform {
+  display: flex;
+  flex-flow: row wrap;
+}
+
+.half-width {
+  width: 46%;
+  margin-right: 2%;
+  margin-left: 2%;
+}
+
+.full-width {
+  width: 96%;
+  margin-right: 2%;
+  margin-left: 2%;
+}

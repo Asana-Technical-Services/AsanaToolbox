@@ -45,7 +45,7 @@ const ResponseEditor = ({ initJson, param, save }) => {
   };
   console.log(currentJson);
   return (
-    <FormControl fullWidth>
+    <div fullWidth>
       <CodeMirror
         id={param + "input"}
         value={currentJson}
@@ -59,12 +59,11 @@ const ResponseEditor = ({ initJson, param, save }) => {
           onClick={saveJson}
           class="w-fit px-5 py-2 m-auto bg-blue-500 text-white rounded-full"
         >
-          {" "}
-          Save{" "}
+          Save
         </Button>
       }
       {isSaved && <div className="bg-green-400"> Saved! </div>}
-    </FormControl>
+    </div>
   );
 };
 

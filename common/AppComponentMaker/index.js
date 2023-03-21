@@ -1,8 +1,17 @@
 import { useSession } from "next-auth/react";
 import { useState, useEffect } from "react";
-import { FormControl, InputLabel, Select, MenuItem } from "@mui/material";
+import {
+  FormControl,
+  InputLabel,
+  Select,
+  TextField,
+  MenuItem,
+  Button,
+  Typography,
+} from "@mui/material";
 import axios from "axios";
 import ResponseEditor from "./components/ResponseEditor";
+import WidgetBulder from "./components/WidgetBuilder";
 
 export default function Component() {
   const { data: session } = useSession();
@@ -11,6 +20,15 @@ export default function Component() {
   const [workspaces, setAvailableWorkspaces] = useState([]);
   const [currentWorkspace, setCurrentWorkspace] = useState();
   const [dbRecord, setDbRecord] = useState({});
+  const [jsonStatus, setJsonStatus] = useState();
+  const [tempJson, setTempJson] = useState({});
+  const [copyStatus, setCopyStatus] = useState(false);
+
+  useEffect(() => {
+    if (dbRecord?.config) {
+      setTempJson(JSON.stringify(dbRecord.config));
+    }
+  }, [dbRecord, setTempJson]);
 
   useEffect(() => {
     if (session && session.access_token) {
@@ -35,6 +53,7 @@ export default function Component() {
 
   const handleWorkspaceChange = async (e) => {
     if (e.target.value && e.target.value != "none") {
+      console.log(e.target.value);
       setCurrentWorkspace(e.target.value);
       let resp = await fetch(
         "/api/apps/AppComponentMaker/config?user=" +
@@ -54,6 +73,53 @@ export default function Component() {
       setCurrentWorkspace("none");
       setDbRecord({});
     }
+  };
+
+  const handleJsonChange = (e) => {
+    setTempJson(e.target.value);
+  };
+
+  const saveJson = async () => {
+    try {
+      let newDbRecord = dbRecord;
+      newDbRecord.config = JSON.parse(tempJson);
+
+      let res = await fetch(
+        "/api/apps/AppComponentMaker/config?user=" +
+          session.user.gid +
+          "&workspace=" +
+          currentWorkspace,
+        { method: "POST", body: JSON.stringify(newDbRecord) }
+      );
+      if (res.data) {
+        setDbRecord(res.data);
+      }
+      if (res.ok) {
+        setJsonStatus("Saved!");
+        setTimeout(() => setJsonStatus(), 2000);
+        return true;
+      } else {
+        setJsonStatus("Invalid Json! cannot save!");
+        setTimeout(() => setJsonStatus(), 2000);
+        return false;
+      }
+    } catch {
+      setJsonStatus("Invalid Json! cannot save!");
+      setTimeout(() => setJsonStatus(), 2000);
+      return false;
+    }
+  };
+
+  const copyJson = () => {
+    navigator.clipboard.writeText(tempJson).then(
+      () => {
+        setCopyStatus(true);
+        setTimeout(() => {
+          setCopyStatus(false);
+        }, 1000);
+      },
+      () => {}
+    );
   };
 
   const save = async (param, value) => {
@@ -79,9 +145,6 @@ export default function Component() {
     }
   };
 
-  // we have Tailwind CSS https://tailwindcss.com/docs/installation
-  //  and Material UI components https://mui.com/material-ui/
-  // available to import and use
   return (
     <div className="px-4 py-2 m-auto my-20 max-w-2xl flex flex-col content-center">
       <h1>Custom App Component Demo</h1>
@@ -252,8 +315,32 @@ export default function Component() {
 
         {currentWorkspace && currentWorkspace !== "none" && (
           <div>
+            <div className="block m-3"></div>
+            <details>
+              <summary>full json for quick import/export</summary>
+              <div>
+                <p>
+                  only use this for copy/pasting of config data, this could
+                  potentially lock the app configurations below
+                </p>
+                {jsonStatus && <div>{jsonStatus}</div>}
+                <TextField
+                  margin="normal"
+                  className="full-width"
+                  id={"full_json_export_import"}
+                  label="Full Config Json"
+                  value={tempJson}
+                  onChange={handleJsonChange}
+                />
+                {copyStatus && <div className="bg-green-700">{"copied!"}</div>}
+                <Button onClick={copyJson}>Copy Json</Button>
+                <Button onClick={saveJson}> Save</Button>
+              </div>
+            </details>
+            <div className="block m-3"></div>
+
             <div>
-              <b>Widget</b>
+              <Typography variant="h3">Widget</Typography>
               <p>
                 Edit the JSON below to configure your Widget, then hit save. To
                 see a live preview, use the UI builder provided in the dev
@@ -272,7 +359,7 @@ export default function Component() {
                   https://developers.asana.com/docs/widget-metadata
                 </a>{" "}
               </p>
-              <ResponseEditor
+              <WidgetBulder
                 initJson={dbRecord.config?.widget || defaultWidget}
                 param="widget"
                 save={save}
