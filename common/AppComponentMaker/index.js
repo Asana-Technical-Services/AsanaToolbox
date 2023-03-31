@@ -12,6 +12,9 @@ import {
 import axios from "axios";
 import ResponseEditor from "./components/ResponseEditor";
 import WidgetBulder from "./components/WidgetBuilder";
+import LookupBuilder from "./components/lookupbuilder";
+import AttachmentBuilder from "./components/AttachmentBuilder";
+import FormBuilder from "./components/FormBuilder.js";
 
 export default function Component() {
   const { data: session } = useSession();
@@ -342,16 +345,9 @@ export default function Component() {
             <div>
               <Typography variant="h3">Widget</Typography>
               <p>
-                Edit the JSON below to configure your Widget, then hit save. To
-                see a live preview, use the UI builder provided in the dev
-                console here:{" "}
-                <a
-                  className="text-blue-700"
-                  href="https://app.asana.com/0/my-apps/response-builder"
-                >
-                  https://app.asana.com/0/my-apps/response-builder
-                </a>{" "}
-                or review the documentation at{" "}
+                Edit the configuration below to set up your Widget, then hit
+                save. To see a live preview, attach a resource to a task and
+                refresh your widget in Asana. Check out the documentation at{" "}
                 <a
                   className="text-blue-700"
                   href="https://developers.asana.com/docs/widget-metadata"
@@ -366,19 +362,12 @@ export default function Component() {
               />
             </div>
             <div>
-              <b>Lookup list</b>
+              <br></br>
+              <Typography variant="h3">Lookup list</Typography>
               <p>
-                Edit the JSON below to configure your lookup list, then hit
-                save. This list of items will appear when the user types in the
-                box to add a resource in the task pane. You can play around with
-                a preview using the UI builder here:
-                <a
-                  className="text-blue-700"
-                  href="https://app.asana.com/0/my-apps/response-builder"
-                >
-                  https://app.asana.com/0/my-apps/response-builder
-                </a>{" "}
-                or review the documentation at{" "}
+                Edit the configuration below, then hit save. This list of items
+                will appear when the user types in the box to add a resource in
+                the task pane. You can review the documentation at{" "}
                 <a
                   className="text-blue-700"
                   href="https://developers.asana.com/docs/lookup"
@@ -386,19 +375,17 @@ export default function Component() {
                   https://developers.asana.com/docs/lookup
                 </a>{" "}
               </p>
-              <ResponseEditor
+              <LookupBuilder
                 initJson={dbRecord.config?.lookup || defaultLookup}
-                param="lookup"
                 save={save}
               />
             </div>
             <div>
               <b>Attachment</b>
               <p>
-                Edit the JSON below to configure your attachment name and
-                reference URL, then hit save. This will be the name of the
-                "resource" that gets attached to the task. You can review the
-                documentation at{" "}
+                Edit the config below to set your attachment name and reference
+                URL, then hit save. This will be the name of the "resource" that
+                gets attached to the task. You can review the documentation at{" "}
                 <a
                   className="text-blue-700"
                   href="https://developers.asana.com/docs/attached-resource"
@@ -406,9 +393,8 @@ export default function Component() {
                   https://developers.asana.com/docs/attached-resource
                 </a>{" "}
               </p>
-              <ResponseEditor
+              <AttachmentBuilder
                 initJson={dbRecord.config?.attachment || defaultAttachment}
-                param="attachment"
                 save={save}
               />
             </div>
@@ -416,24 +402,17 @@ export default function Component() {
             <div>
               <b>Modal Form</b>
               <p>
-                Edit the JSON below to configure your Widget, then hit save. To
-                see a live preview, use the UI builder provided in the dev
-                console here:{" "}
+                Edit the config below to add fields to your form, then hit save.
+                To see a live preview, open your app in your Asana environment.
+                Check out the documentation on modal forms here:
                 <a
                   className="text-blue-700"
-                  href="https://app.asana.com/0/my-apps/response-builder"
+                  href="https://developers.asana.com/reference/modal-forms"
                 >
-                  https://app.asana.com/0/my-apps/response-builder
-                </a>{" "}
-                or review the documentation at{" "}
-                <a
-                  className="text-blue-700"
-                  href="https://developers.asana.com/docs/widget-metadata"
-                >
-                  https://developers.asana.com/docs/widget-metadata
+                  https://developers.asana.com/reference/modal-forms
                 </a>{" "}
               </p>
-              <ResponseEditor
+              <FormBuilder
                 initJson={dbRecord.config?.form || defaultForm}
                 param="form"
                 save={save}
@@ -442,24 +421,17 @@ export default function Component() {
             <div>
               <b>Rule Form</b>
               <p>
-                Edit the JSON below to configure your Widget, then hit save. To
-                see a live preview, use the UI builder provided in the dev
-                console here:{" "}
+                Edit the config below to configure your Rule form, then hit
+                save. To see a live preview, open the rule builder in Asana for
+                your app. or review the documentation at{" "}
                 <a
                   className="text-blue-700"
-                  href="https://app.asana.com/0/my-apps/response-builder"
+                  href="https://developers.asana.com/reference/rule-actions#formmetadata"
                 >
-                  https://app.asana.com/0/my-apps/response-builder
-                </a>{" "}
-                or review the documentation at{" "}
-                <a
-                  className="text-blue-700"
-                  href="https://developers.asana.com/docs/widget-metadata"
-                >
-                  https://developers.asana.com/docs/widget-metadata
+                  https://developers.asana.com/reference/rule-actions#formmetadata
                 </a>{" "}
               </p>
-              <ResponseEditor
+              <FormBuilder
                 initJson={dbRecord.config?.ruleForm || defaultRuleForm}
                 param="ruleForm"
                 save={save}
@@ -543,19 +515,23 @@ const defaultForm = {
       {
         type: "multi_line_text",
         id: "multi_line_text",
-        name: "Multi-line text field",
+        name: "Describe your ask",
         value: "",
         is_required: false,
-        placeholder: "Type something...",
       },
       {
         type: "checkbox",
         id: "checkbox",
+        name: "Select all that apply",
         is_required: true,
         options: [
           {
             id: "1",
-            label: "Checkbox field",
+            label: "project 1",
+          },
+          {
+            id: "2",
+            label: "project 2",
           },
         ],
       },
@@ -572,24 +548,26 @@ const defaultRuleForm = {
       {
         type: "multi_line_text",
         id: "multi_line_text",
-        name: "Multi-line text field",
+        name: "Standard description to be used:",
         value: "",
         is_required: false,
-        placeholder: "Type something...",
       },
       {
         type: "checkbox",
         id: "checkbox",
+        name: "Select projects to include",
         is_required: true,
         options: [
           {
             id: "1",
-            label: "Checkbox field",
+            label: "project 1",
+          },
+          {
+            id: "2",
+            label: "project 2",
           },
         ],
       },
     ],
   },
 };
-// todo:
-// lookup list of resources, modal form, default attachment, ruleaction - form,

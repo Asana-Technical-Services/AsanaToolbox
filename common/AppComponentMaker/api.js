@@ -179,7 +179,7 @@ const api = async (req, res) => {
       } catch (error) {
         console.log("error!");
         console.log(error);
-        res.status(500);
+        res.status(200).send();
       }
     } else if (route[1] == "rule-submit") {
       res.status(200).send();
@@ -195,11 +195,11 @@ const api = async (req, res) => {
           .promise();
 
         console.log("rule run");
-        console.log(item.Item?.config?.attachment);
-        res.json({
-          action_result: "ok",
-          resources_created: [item.Item?.config?.attachment || {}],
-        });
+        res
+          .json({
+            action_result: "ok",
+            resources_created: [item.Item?.config?.attachment || {}],
+          })
       } catch (error) {
         console.log("error!");
         console.log(error);
