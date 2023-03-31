@@ -200,7 +200,6 @@ const api = async (req, res) => {
             action_result: "ok",
             resources_created: [item.Item?.config?.attachment || {}],
           })
-          
       } catch (error) {
         console.log("error!");
         console.log(error);
