@@ -8,7 +8,8 @@ import {
   Button,
   MenuItem,
 } from "@mui/material";
-const WidgetBulder = ({ initJson, param, save }) => {
+import FormFieldBuilder from "./FormComponents/FormFieldBuilder";
+const FormBuilder = ({ initJson, param, save }) => {
   const [currentJson, setCurrentJson] = useState(initJson);
   const [isSaved, setIsSaved] = useState(false);
   const [fields, setFields] = useState(initJson.metadata.fields || []);
@@ -31,6 +32,10 @@ const WidgetBulder = ({ initJson, param, save }) => {
     let tempJson = { ...currentJson };
     console.log(tempJson);
     tempJson.metadata.fields.splice(index, 1);
+    tempJson.metadata.fields = tempJson.metadata.fields.map((field, index) => {
+      field.id = `field_${index}`;
+      return field;
+    });
     setCurrentJson(tempJson);
   };
 
@@ -38,10 +43,12 @@ const WidgetBulder = ({ initJson, param, save }) => {
     let tempJson = currentJson;
     let newArray = [...currentJson.metadata.fields];
     newArray.push({
-      color: "green",
-      name: "Status",
-      text: "In Progress",
-      type: "pill",
+      name: "Multi-line text field",
+      id: `field_${newArray.length + 1}`,
+      placeholder: "Type something...",
+      type: "multi_line_text",
+      value: "",
+      is_required: false,
     });
     tempJson.metadata.fields = newArray;
     setCurrentJson(tempJson);
@@ -58,87 +65,36 @@ const WidgetBulder = ({ initJson, param, save }) => {
     setCurrentJson(tempJson);
   };
 
-  const updateFooter = (field, value) => {
-    let tempJson = { ...currentJson };
-    if (field === "icon_url" && value === "") {
-      delete tempJson[field];
-    } else {
-      tempJson.metadata.footer[field] = value;
-    }
-    setCurrentJson(tempJson);
-  };
-
   return (
-    <div fullWidth>
+    <div>
       <div className="block m-5"></div>
-      <Typography variant="h5" className="block">
-        Header:
-      </Typography>
       <TextField
         margin="normal"
         required
         className="full-width"
-        label="Resource Name"
+        label="Form Title"
         value={currentJson.metadata.title}
         onChange={(e) => updateJson("title", e.target.value)}
-      />
-      <TextField
-        margin="normal"
-        className="half-width"
-        label="subtitle icon url"
-        onChange={(e) => updateJson("subicon_url", e.target.value)}
-        value={currentJson.metadata.subicon_url || ""}
-      />
-      <TextField
-        margin="normal"
-        label="subtitle"
-        className="half-width"
-        value={currentJson.metadata.subtitle || ""}
-        onChange={(e) => updateJson("subtitle", e.target.value)}
       />
       <div className="block m-5"></div>
       <Typography variant="h5">Fields:</Typography>
       <hr></hr>
       {currentJson.metadata.fields.map((field, index) => (
         <div>
-          <WidgetFieldEditor
+          <FormFieldBuilder
             field={field}
             index={index}
             updateField={updateField}
             deleteField={deleteField}
-          ></WidgetFieldEditor>
+          />
           <hr></hr>
         </div>
       ))}
-      {currentJson.metadata.fields.length < 4 && (
-        <div className="m-5 flex">
-          <Button className="only:w-fit px-5 py-2 m-auto " onClick={addField}>
-            + add field
-          </Button>
-        </div>
-      )}
-      <Typography variant="h5">Footer:</Typography>
-      <TextField
-        margin="normal"
-        className="full-width"
-        label="footer text"
-        value={currentJson.metadata.footer.text || ""}
-        onChange={(e) => updateFooter("text", e.target.value)}
-      />
-      <TextField
-        margin="normal"
-        label="Footer icon url (optional)"
-        className="half-width"
-        onChange={(e) => updateFooter("icon_url", e.target.value)}
-        value={currentJson.metadata.footer.icon_url || ""}
-      />
-      <TextField
-        margin="normal"
-        className="half-width"
-        label="Number of Comments (optional)"
-        onChange={(e) => updateFooter("num_comments", e.target.value)}
-        value={currentJson.metadata.footer.num_comments || ""}
-      />
+      <div className="m-5 flex">
+        <Button className="only:w-fit px-5 py-2 m-auto " onClick={addField}>
+          + add field
+        </Button>
+      </div>
       <div className="m-5 flex">
         <Button
           margin="normal"
@@ -154,4 +110,4 @@ const WidgetBulder = ({ initJson, param, save }) => {
   );
 };
 
-export default WidgetBulder;
+export default FormBuilder;

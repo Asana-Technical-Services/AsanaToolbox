@@ -43,10 +43,10 @@ const WidgetFieldEditor = ({ index, field, updateField, deleteField }) => {
 
   if (field.type == "pill") {
     return (
-      <div fullWidth className="widgetform py-4">
-        <Typography variant="h6" className="full-width" gutterBottom>
-          Pill field
-        </Typography>
+      <div
+        fullWidth
+        className="widgetform py-4 px-2 border-l-gray-300 border-l-2"
+      >
         <FormControl fullWidth className="half-width">
           <InputLabel
             id={"field-type-label-" + index}
@@ -126,10 +126,7 @@ const WidgetFieldEditor = ({ index, field, updateField, deleteField }) => {
     );
   } else if (field.type == "text_with_icon") {
     return (
-      <div className="widgetform py-4">
-        <Typography className="full-width" variant="h6" gutterBottom>
-          Text Field with Icon
-        </Typography>
+      <div className="widgetform py-4  px-2 border-l-gray-300 border-l-2">
         <FormControl fullWidth className="half-width">
           <InputLabel
             id={"field-type-label-" + index}
