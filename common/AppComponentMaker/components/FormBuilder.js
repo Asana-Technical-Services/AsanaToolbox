@@ -1,12 +1,8 @@
 import { useState } from "react";
-import WidgetFieldEditor from "./WidgetFieldEditor";
 import {
-  FormControl,
   TextField,
   Typography,
-  Select,
   Button,
-  MenuItem,
 } from "@mui/material";
 import FormFieldBuilder from "./FormComponents/FormFieldBuilder";
 const FormBuilder = ({ initJson, param, save }) => {

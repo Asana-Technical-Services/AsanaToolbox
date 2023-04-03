@@ -10,11 +10,10 @@ import {
   Typography,
 } from "@mui/material";
 import axios from "axios";
-import ResponseEditor from "./components/ResponseEditor";
+import LookupBuilder from "./components/LookupBuilder";
 import WidgetBulder from "./components/WidgetBuilder";
-import LookupBuilder from "./components/lookupbuilder";
 import AttachmentBuilder from "./components/AttachmentBuilder";
-import FormBuilder from "./components/FormBuilder.js";
+import FormBuilder from "./components/FormBuilder";
 
 export default function Component() {
   const { data: session } = useSession();
@@ -150,7 +149,7 @@ export default function Component() {
 
   return (
     <div className="px-4 py-2 m-auto my-20 max-w-2xl flex flex-col content-center">
-      <h1>Custom App Component Demo</h1>
+      <h1>Custom App Component Config</h1>
       <p>
         This app allows you to create a customized App Component for
         demonstration purposes. Please follow all of the steps on this page

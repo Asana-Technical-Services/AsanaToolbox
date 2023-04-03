@@ -1,12 +1,9 @@
 import { useState } from "react";
 import WidgetFieldEditor from "./WidgetFieldEditor";
 import {
-  FormControl,
   TextField,
   Typography,
-  Select,
   Button,
-  MenuItem,
 } from "@mui/material";
 const WidgetBulder = ({ initJson, param, save }) => {
   const [currentJson, setCurrentJson] = useState(initJson);

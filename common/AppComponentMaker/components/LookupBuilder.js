@@ -1,13 +1,5 @@
 import { useState } from "react";
-import WidgetFieldEditor from "./WidgetFieldEditor";
-import {
-  FormControl,
-  TextField,
-  Typography,
-  Select,
-  Button,
-  MenuItem,
-} from "@mui/material";
+import { TextField, Typography, Button } from "@mui/material";
 const LookupBuilder = ({ initJson, save }) => {
   const [currentJson, setCurrentJson] = useState(initJson);
   const [isSaved, setIsSaved] = useState(false);

@@ -1,17 +1,7 @@
-import { useSession } from "next-auth/react";
 import { useState, useEffect } from "react";
-import {
-  Input,
-  Skeleton,
-  FormControl,
-  InputLabel,
-  Select,
-  Button,
-  MenuItem,
-} from "@mui/material";
-import JSONInput from "react-json-editor-ajrm";
+import { Button } from "@mui/material";
 import CodeMirror from "@uiw/react-codemirror";
-import { json, jsonLanguage, jsonParseLinter } from "@codemirror/lang-json";
+import { json, jsonLanguage } from "@codemirror/lang-json";
 
 const ResponseEditor = ({ initJson, param, save }) => {
   const [currentJson, setCurrentJson] = useState("");
