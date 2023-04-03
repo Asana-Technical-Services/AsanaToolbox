@@ -1,13 +1,5 @@
 import { useState } from "react";
-import WidgetFieldEditor from "./WidgetFieldEditor";
-import {
-  FormControl,
-  TextField,
-  Typography,
-  Select,
-  Button,
-  MenuItem,
-} from "@mui/material";
+import { TextField, Typography, Button } from "@mui/material";
 const LookupBuilder = ({ initJson, save }) => {
   const [currentJson, setCurrentJson] = useState(initJson);
   const [isSaved, setIsSaved] = useState(false);
@@ -73,7 +65,7 @@ const LookupBuilder = ({ initJson, save }) => {
       <Typography variant="h5">Typeahead Items:</Typography>
       <hr></hr>
       {currentJson.items.map((item, index) => (
-        <div>
+        <div key={index}>
           <TextField
             margin="normal"
             required

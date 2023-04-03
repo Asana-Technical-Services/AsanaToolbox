@@ -8,13 +8,13 @@ import {
   MenuItem,
   Button,
   Typography,
+  setRef,
 } from "@mui/material";
 import axios from "axios";
-import ResponseEditor from "./components/ResponseEditor";
+import LookupBuilder from "./components/LookupBuilder";
 import WidgetBulder from "./components/WidgetBuilder";
-import LookupBuilder from "./components/lookupbuilder";
 import AttachmentBuilder from "./components/AttachmentBuilder";
-import FormBuilder from "./components/FormBuilder.js";
+import FormBuilder from "./components/FormBuilder";
 
 export default function Component() {
   const { data: session } = useSession();
@@ -35,12 +35,7 @@ export default function Component() {
 
   useEffect(() => {
     if (session && session.access_token) {
-      // do any inialization here - as soon as we have an access token read from the JWT in cookies.
-      // sometimes the session isn't set on first render, especially if users are navigating directly to your app
-
-      // for convenience, also adding "ready" as a stateful variable.
-      //if we haven't already, get our available workspaces
-      if (workspaces?.length == 0) {
+      if (workspaces?.length === 0) {
         axios
           .get("https://app.asana.com/api/1.0/workspaces", {
             headers: { Authorization: `Bearer ${session.access_token}` },
@@ -56,7 +51,6 @@ export default function Component() {
 
   const handleWorkspaceChange = async (e) => {
     if (e.target.value && e.target.value != "none") {
-      console.log(e.target.value);
       setCurrentWorkspace(e.target.value);
       let resp = await fetch(
         "/api/apps/AppComponentMaker/config?user=" +
@@ -150,7 +144,7 @@ export default function Component() {
 
   return (
     <div className="px-4 py-2 m-auto my-20 max-w-2xl flex flex-col content-center">
-      <h1>Custom App Component Demo</h1>
+      <h1>Custom App Component Config</h1>
       <p>
         This app allows you to create a customized App Component for
         demonstration purposes. Please follow all of the steps on this page
@@ -356,6 +350,7 @@ export default function Component() {
                 </a>{" "}
               </p>
               <WidgetBulder
+                key={dbRecord.config?.widget}
                 initJson={dbRecord.config?.widget || defaultWidget}
                 param="widget"
                 save={save}
@@ -376,6 +371,7 @@ export default function Component() {
                 </a>{" "}
               </p>
               <LookupBuilder
+                key={dbRecord.config?.lookup}
                 initJson={dbRecord.config?.lookup || defaultLookup}
                 save={save}
               />
@@ -394,6 +390,7 @@ export default function Component() {
                 </a>{" "}
               </p>
               <AttachmentBuilder
+                key={dbRecord.config?.attachment}
                 initJson={dbRecord.config?.attachment || defaultAttachment}
                 save={save}
               />
@@ -413,6 +410,7 @@ export default function Component() {
                 </a>{" "}
               </p>
               <FormBuilder
+                key={dbRecord.config?.form}
                 initJson={dbRecord.config?.form || defaultForm}
                 param="form"
                 save={save}
@@ -432,6 +430,7 @@ export default function Component() {
                 </a>{" "}
               </p>
               <FormBuilder
+                key={dbRecord.config?.widget}
                 initJson={dbRecord.config?.ruleForm || defaultRuleForm}
                 param="ruleForm"
                 save={save}

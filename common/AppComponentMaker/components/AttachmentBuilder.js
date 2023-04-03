@@ -1,12 +1,7 @@
 import { useState } from "react";
-import WidgetFieldEditor from "./WidgetFieldEditor";
 import {
-  FormControl,
   TextField,
-  Typography,
-  Select,
   Button,
-  MenuItem,
 } from "@mui/material";
 const AttachmentBuilder = ({ initJson, save }) => {
   const [currentJson, setCurrentJson] = useState(initJson);

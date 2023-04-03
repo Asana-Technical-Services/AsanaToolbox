@@ -5,7 +5,6 @@ import {
   Button,
   MenuItem,
   InputLabel,
-  Typography,
 } from "@mui/material";
 import CheckboxQuestion from "./CheckboxQuestion";
 import GenericQuestion from "./GenericQuestion";
