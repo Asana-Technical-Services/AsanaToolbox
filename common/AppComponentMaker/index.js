@@ -371,6 +371,7 @@ export default function Component() {
                 </a>{" "}
               </p>
               <LookupBuilder
+                key={dbRecord.config?.lookup}
                 initJson={dbRecord.config?.lookup || defaultLookup}
                 save={save}
               />
@@ -389,6 +390,7 @@ export default function Component() {
                 </a>{" "}
               </p>
               <AttachmentBuilder
+                key={dbRecord.config?.attachment}
                 initJson={dbRecord.config?.attachment || defaultAttachment}
                 save={save}
               />
@@ -408,6 +410,7 @@ export default function Component() {
                 </a>{" "}
               </p>
               <FormBuilder
+                key={dbRecord.config?.form}
                 initJson={dbRecord.config?.form || defaultForm}
                 param="form"
                 save={save}
@@ -427,6 +430,7 @@ export default function Component() {
                 </a>{" "}
               </p>
               <FormBuilder
+                key={dbRecord.config?.widget}
                 initJson={dbRecord.config?.ruleForm || defaultRuleForm}
                 param="ruleForm"
                 save={save}

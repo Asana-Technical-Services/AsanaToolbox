@@ -93,7 +93,7 @@ const WidgetBulder = ({ initJson, param, save }) => {
       <Typography variant="h5">Fields:</Typography>
       <hr></hr>
       {currentJson.metadata.fields.map((field, index) => (
-        <div key={String(field.name) + index}>
+        <div key={index}>
           <WidgetFieldEditor
             field={field}
             index={index}
