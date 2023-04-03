@@ -57,9 +57,9 @@ const api = async (req, res) => {
 
   //routes:  hi, rule-form, rule-submit,rule-run, get form, form-submit,
   if (route.length > 1) {
-    if (route[1] === "config") {
-      if (session && session.user.gid && session.user.gid === user_gid) {
-        if (req.method === "GET") {
+    if (route[1] == "config") {
+      if (session && session.user.gid && session.user.gid == user_gid) {
+        if (req.method == "GET") {
           try {
             let item = await ddb
               .get({
@@ -75,7 +75,7 @@ const api = async (req, res) => {
             console.log(error);
             res.status(500).send();
           }
-        } else if (req.method === "POST") {
+        } else if (req.method == "POST") {
           console.log("post");
           console.log(req.body);
           let item = JSON.parse(req.body);
@@ -116,7 +116,7 @@ const api = async (req, res) => {
       // user, workspace, widget, resources, default resource (attachment), form, rule form
       //
       //
-    } else if (route[1] === "widget") {
+    } else if (route[1] == "widget") {
       console.log("widget");
       try {
         let item = await ddb
@@ -137,7 +137,7 @@ const api = async (req, res) => {
         console.log(error);
         res.status(500);
       }
-    } else if (route[1] === "auth") {
+    } else if (route[1] == "auth") {
       res.status(200).send(`<!DOCTYPE html>)
 <html lang="en">
   <head>
@@ -152,7 +152,7 @@ const api = async (req, res) => {
     </script>
   </body>
 </html>`);
-    } else if (route[1] === "rule-form") {
+    } else if (route[1] == "rule-form") {
       console.log("rule-form");
       try {
         let item = await ddb
@@ -173,9 +173,9 @@ const api = async (req, res) => {
         console.log(error);
         res.status(200).send();
       }
-    } else if (route[1] === "rule-submit") {
+    } else if (route[1] == "rule-submit") {
       res.status(200).send();
-    } else if (route[1] === "rule-run") {
+    } else if (route[1] == "rule-run") {
       try {
         let item = await ddb
           .get({
@@ -196,7 +196,7 @@ const api = async (req, res) => {
         console.log(error);
         res.status(500).send();
       }
-    } else if (route[1] === "form") {
+    } else if (route[1] == "form") {
       console.log("form");
       try {
         let item = await ddb
@@ -216,9 +216,9 @@ const api = async (req, res) => {
         console.log(error);
         res.status(500);
       }
-    } else if (route[1] === "form-submit") {
+    } else if (route[1] == "form-submit") {
       res.status(200).send();
-    } else if (route[1] === "attach") {
+    } else if (route[1] == "attach") {
       console.log("attach");
       console.log(user_gid);
       console.log(workspace_gid);
@@ -242,7 +242,7 @@ const api = async (req, res) => {
         console.log(error);
         res.status(500);
       }
-    } else if (route[1] === "lookup") {
+    } else if (route[1] == "lookup") {
       try {
         let item = await ddb
           .get({

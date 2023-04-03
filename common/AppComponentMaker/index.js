@@ -35,7 +35,7 @@ export default function Component() {
 
   useEffect(() => {
     if (session && session.access_token) {
-      if (workspaces?.length === 0) {
+      if (workspaces?.length == 0) {
         axios
           .get("https://app.asana.com/api/1.0/workspaces", {
             headers: { Authorization: `Bearer ${session.access_token}` },
