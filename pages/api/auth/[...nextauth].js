@@ -71,6 +71,7 @@ export default NextAuth({
      */
 
     async session({ session, token }) {
+      console.log("log for session");
       // Add access_token to session
       session.access_token = token.access_token;
       session.user.name = token.name;

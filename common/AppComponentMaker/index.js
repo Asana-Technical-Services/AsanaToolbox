@@ -8,6 +8,7 @@ import {
   MenuItem,
   Button,
   Typography,
+  setRef,
 } from "@mui/material";
 import axios from "axios";
 import LookupBuilder from "./components/LookupBuilder";
@@ -27,6 +28,7 @@ export default function Component() {
   const [copyStatus, setCopyStatus] = useState(false);
 
   useEffect(() => {
+    console.log(dbRecord);
     if (dbRecord?.config) {
       setTempJson(JSON.stringify(dbRecord.config));
     }
@@ -34,12 +36,7 @@ export default function Component() {
 
   useEffect(() => {
     if (session && session.access_token) {
-      // do any inialization here - as soon as we have an access token read from the JWT in cookies.
-      // sometimes the session isn't set on first render, especially if users are navigating directly to your app
-
-      // for convenience, also adding "ready" as a stateful variable.
-      //if we haven't already, get our available workspaces
-      if (workspaces?.length == 0) {
+      if (workspaces?.length === 0) {
         axios
           .get("https://app.asana.com/api/1.0/workspaces", {
             headers: { Authorization: `Bearer ${session.access_token}` },
@@ -355,6 +352,7 @@ export default function Component() {
                 </a>{" "}
               </p>
               <WidgetBulder
+                key={dbRecord.config?.widget}
                 initJson={dbRecord.config?.widget || defaultWidget}
                 param="widget"
                 save={save}

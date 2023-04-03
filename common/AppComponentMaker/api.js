@@ -41,6 +41,10 @@ const api = async (req, res) => {
   } catch (error) {
     console.log(error);
   }
+  if (req.method === "POST") {
+    console.log(req.method);
+    console.log(req.headers);
+  }
   await applyCors(req, res, cors);
   const route = req.query.all;
   let user_gid = req?.query?.user;
@@ -77,7 +81,6 @@ const api = async (req, res) => {
             console.log(error);
             res.status(500).send();
           }
-          return;
         } else if (req.method === "POST") {
           console.log("post");
           console.log(req.body);
@@ -101,16 +104,12 @@ const api = async (req, res) => {
                 }
               }
             );
-
-            return;
           } catch (error) {
             console.log("error!");
             console.log(error);
             res.status(500).send();
           }
-          return;
         }
-        console.log("unknown request");
       } else {
         res.status(400);
         res.send();
@@ -159,7 +158,6 @@ const api = async (req, res) => {
     </script>
   </body>
 </html>`);
-      return;
     } else if (route[1] === "rule-form") {
       console.log("rule-form");
       try {
@@ -195,11 +193,10 @@ const api = async (req, res) => {
           .promise();
 
         console.log("rule run");
-        res
-          .json({
-            action_result: "ok",
-            resources_created: [item.Item?.config?.attachment || {}],
-          })
+        res.json({
+          action_result: "ok",
+          resources_created: [item.Item?.config?.attachment || {}],
+        });
       } catch (error) {
         console.log("error!");
         console.log(error);
@@ -272,14 +269,12 @@ const api = async (req, res) => {
       }
     } else {
       res.status(404).send();
-      return;
     }
   }
 
   res.status(200);
 
   res.end();
-  return;
 };
 
 export default api;

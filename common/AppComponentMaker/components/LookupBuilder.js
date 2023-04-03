@@ -65,7 +65,7 @@ const LookupBuilder = ({ initJson, save }) => {
       <Typography variant="h5">Typeahead Items:</Typography>
       <hr></hr>
       {currentJson.items.map((item, index) => (
-        <div>
+        <div key={item.title + index}>
           <TextField
             margin="normal"
             required

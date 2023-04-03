@@ -5,12 +5,11 @@ import {
   Button,
   MenuItem,
   InputLabel,
-  Typography,
 } from "@mui/material";
 const WidgetFieldEditor = ({ index, field, updateField, deleteField }) => {
   const handleUpdate = (key, value) => {
     let newField = field;
-    if (key == "icon_url" && value == "") {
+    if (key === "icon_url" && value === "") {
       delete newField[key];
     } else {
       newField[key] = value;
@@ -41,7 +40,7 @@ const WidgetFieldEditor = ({ index, field, updateField, deleteField }) => {
     }
   };
 
-  if (field.type == "pill") {
+  if (field.type === "pill") {
     return (
       <div
         fullWidth
@@ -124,7 +123,7 @@ const WidgetFieldEditor = ({ index, field, updateField, deleteField }) => {
         </Button>
       </div>
     );
-  } else if (field.type == "text_with_icon") {
+  } else if (field.type === "text_with_icon") {
     return (
       <div className="widgetform py-4  px-2 border-l-gray-300 border-l-2">
         <FormControl fullWidth className="half-width">

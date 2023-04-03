@@ -1,9 +1,5 @@
 import { useState } from "react";
-import {
-  TextField,
-  Typography,
-  Button,
-} from "@mui/material";
+import { TextField, Typography, Button } from "@mui/material";
 import FormFieldBuilder from "./FormComponents/FormFieldBuilder";
 const FormBuilder = ({ initJson, param, save }) => {
   const [currentJson, setCurrentJson] = useState(initJson);
@@ -76,7 +72,7 @@ const FormBuilder = ({ initJson, param, save }) => {
       <Typography variant="h5">Fields:</Typography>
       <hr></hr>
       {currentJson.metadata.fields.map((field, index) => (
-        <div>
+        <div key={String(field.name) + String(field.type) + String(index)}>
           <FormFieldBuilder
             field={field}
             index={index}

@@ -1,10 +1,6 @@
 import { useState } from "react";
 import WidgetFieldEditor from "./WidgetFieldEditor";
-import {
-  TextField,
-  Typography,
-  Button,
-} from "@mui/material";
+import { TextField, Typography, Button } from "@mui/material";
 const WidgetBulder = ({ initJson, param, save }) => {
   const [currentJson, setCurrentJson] = useState(initJson);
   const [isSaved, setIsSaved] = useState(false);
@@ -97,7 +93,7 @@ const WidgetBulder = ({ initJson, param, save }) => {
       <Typography variant="h5">Fields:</Typography>
       <hr></hr>
       {currentJson.metadata.fields.map((field, index) => (
-        <div>
+        <div key={String(field.name) + index}>
           <WidgetFieldEditor
             field={field}
             index={index}
