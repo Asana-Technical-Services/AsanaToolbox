@@ -41,10 +41,6 @@ const api = async (req, res) => {
   } catch (error) {
     console.log(error);
   }
-  if (req.method === "POST") {
-    console.log(req.method);
-    console.log(req.headers);
-  }
   await applyCors(req, res, cors);
   const route = req.query.all;
   let user_gid = req?.query?.user;
@@ -63,9 +59,7 @@ const api = async (req, res) => {
   if (route.length > 1) {
     if (route[1] === "config") {
       if (session && session.user.gid && session.user.gid === user_gid) {
-        console.log("here");
         if (req.method === "GET") {
-          console.log("get");
           try {
             let item = await ddb
               .get({

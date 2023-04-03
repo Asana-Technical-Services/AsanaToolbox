@@ -28,7 +28,6 @@ export default function Component() {
   const [copyStatus, setCopyStatus] = useState(false);
 
   useEffect(() => {
-    console.log(dbRecord);
     if (dbRecord?.config) {
       setTempJson(JSON.stringify(dbRecord.config));
     }
@@ -52,7 +51,6 @@ export default function Component() {
 
   const handleWorkspaceChange = async (e) => {
     if (e.target.value && e.target.value != "none") {
-      console.log(e.target.value);
       setCurrentWorkspace(e.target.value);
       let resp = await fetch(
         "/api/apps/AppComponentMaker/config?user=" +
