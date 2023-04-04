@@ -1,10 +1,12 @@
-import { getSession } from "next-auth/react";
+import { authOptions } from "pages/api/auth/[...nextauth]";
+import { getServerSession } from "next-auth/next";
 import Cors from "cors";
 
 // Load the AWS SDK for Node.js
 import { DynamoDB } from "aws-sdk";
 const REGION = "us-east-1"; //e.g. "us-east-1"
 const TableName = "AsanaToolboxAppComponents";
+console.log(authOptions);
 
 // Create the DynamoDB service object
 const ddb = new DynamoDB.DocumentClient({
@@ -37,16 +39,19 @@ async function applyCors(req, res, fn) {
 const api = async (req, res) => {
   let session;
   try {
-    session = await getSession({ req });
+    session = await getServerSession(req, res, authOptions);
+    console.log("session : ", session);
   } catch (error) {
-    console.log(error);
+    console.log("error : ", error);
   }
+
   await applyCors(req, res, cors);
   const route = req.query.all;
   let user_gid = req?.query?.user;
   let workspace_gid = req?.query?.workspace;
 
-  let reqData = JSON.parse(req.body?.data || "{}");
+  let reqData = req.body || {};
+  console.log("reqdata");
   console.log(reqData);
   if (!user_gid) {
     user_gid = reqData?.user;
@@ -55,17 +60,21 @@ const api = async (req, res) => {
     workspace_gid = reqData?.workspace;
   }
 
+  [user_gid, workspace_gid] = [String(user_gid), String(workspace_gid)];
+
   //routes:  hi, rule-form, rule-submit,rule-run, get form, form-submit,
   if (route.length > 1) {
-    if (route[1] === "config") {
-      if (session && session.user.gid && session.user.gid === user_gid) {
-        if (req.method === "GET") {
+    if (route[1] == "config") {
+      let userworkspaceid = user_gid + workspace_gid;
+      console.log(userworkspaceid);
+      if (session && session.user.gid && session.user.gid == user_gid) {
+        if (req.method == "GET") {
           try {
             let item = await ddb
               .get({
                 TableName: TableName,
                 Key: {
-                  userworkspace: user_gid + workspace_gid,
+                  userworkspace: userworkspaceid,
                 },
               })
               .promise();
@@ -75,7 +84,7 @@ const api = async (req, res) => {
             console.log(error);
             res.status(500).send();
           }
-        } else if (req.method === "POST") {
+        } else if (req.method == "POST") {
           console.log("post");
           console.log(req.body);
           let item = JSON.parse(req.body);
@@ -116,7 +125,7 @@ const api = async (req, res) => {
       // user, workspace, widget, resources, default resource (attachment), form, rule form
       //
       //
-    } else if (route[1] === "widget") {
+    } else if (route[1] == "widget") {
       console.log("widget");
       try {
         let item = await ddb
@@ -137,7 +146,7 @@ const api = async (req, res) => {
         console.log(error);
         res.status(500);
       }
-    } else if (route[1] === "auth") {
+    } else if (route[1] == "auth") {
       res.status(200).send(`<!DOCTYPE html>)
 <html lang="en">
   <head>
@@ -152,7 +161,7 @@ const api = async (req, res) => {
     </script>
   </body>
 </html>`);
-    } else if (route[1] === "rule-form") {
+    } else if (route[1] == "rule-form") {
       console.log("rule-form");
       try {
         let item = await ddb
@@ -173,20 +182,19 @@ const api = async (req, res) => {
         console.log(error);
         res.status(200).send();
       }
-    } else if (route[1] === "rule-submit") {
+    } else if (route[1] == "rule-submit") {
       res.status(200).send();
-    } else if (route[1] === "rule-run") {
+    } else if (route[1] == "rule-run") {
+      let userworkspaceid = user_gid + workspace_gid;
       try {
         let item = await ddb
           .get({
             TableName: TableName,
             Key: {
-              userworkspace: `${user_gid}${workspace_gid}`,
+              userworkspace: userworkspaceid,
             },
           })
           .promise();
-
-        console.log("rule run");
         res.json({
           action_result: "ok",
           resources_created: [item.Item?.config?.attachment || {}],
@@ -196,7 +204,7 @@ const api = async (req, res) => {
         console.log(error);
         res.status(500).send();
       }
-    } else if (route[1] === "form") {
+    } else if (route[1] == "form") {
       console.log("form");
       try {
         let item = await ddb
@@ -216,13 +224,9 @@ const api = async (req, res) => {
         console.log(error);
         res.status(500);
       }
-    } else if (route[1] === "form-submit") {
+    } else if (route[1] == "form-submit") {
       res.status(200).send();
-    } else if (route[1] === "attach") {
-      console.log("attach");
-      console.log(user_gid);
-      console.log(workspace_gid);
-      console.log(req.body);
+    } else if (route[1] == "attach") {
       try {
         let item = await ddb
           .get({
@@ -242,7 +246,7 @@ const api = async (req, res) => {
         console.log(error);
         res.status(500);
       }
-    } else if (route[1] === "lookup") {
+    } else if (route[1] == "lookup") {
       try {
         let item = await ddb
           .get({
