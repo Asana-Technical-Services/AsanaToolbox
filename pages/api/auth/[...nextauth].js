@@ -1,7 +1,7 @@
 import NextAuth from "next-auth";
 import { env } from "process";
 
-export default NextAuth({
+export const authOptions = {
   // Configure one or more authentication providers
   providers: [
     {
@@ -44,6 +44,10 @@ export default NextAuth({
       // Don't overwrite values to null or undefined when this is called on decoding an encrypted JWT
       // Initial sign in
 
+      console.log("user", user);
+      console.log("account", account);
+      console.log("profile", profile);
+
       if (account && profile) {
         return {
           ...token,
@@ -85,42 +89,27 @@ export default NextAuth({
       // Allows relative callback URLs
       if (url.startsWith("/")) return `${baseUrl}${url}`;
       // Allows callback URLs on the same origin
-      else if (new URL(url).origin === baseUrl) return url;
+      else if (new URL(url).origin == baseUrl) return url;
       return baseUrl;
     },
   },
   useSecureCookies: true,
   session: {
-    jwt: true,
+    strategy: "jwt",
     maxAge: 30 * 24 * 60 * 60,
   },
 
   jwt: {
+    maxAge: 30 * 24 * 60 * 60,
+
     // A secret to use for key generation - you should set this explicitly
     // Defaults to NextAuth.js secret if not explicitly specified.
     // This is used to generate the actual signingKey and produces a warning
     // message if not defined explicitly.
-    secret: env.NEXT_JWT_SECRET,
-    // You can generate a signing key using `jose newkey -s 512 -t oct -a HS512`
-    // This gives you direct knowledge of the key used to sign the token so you can use it
-    // to authenticate indirectly (eg. to a database driver)
-    signingKey: env.NEXT_JWT_SIGNING_KEY,
-    // If you chose something other than the default algorithm for the signingKey (HS512)
-    // you also need to configure the algorithm
-    verificationOptions: {
-      algorithms: ["HS512"],
-    },
-    secureCookie: true,
-    // Set to true to use encryption. Defaults to false (signing only).
-    // similar to the above, you can generate an encryption key to use in your env. variables using:
-    // `jose newkey -s 256 -t oct -a A256GCM`
-    encryption: true,
-    encryptionKey: process.env.NEXT_JWT_ENCRYPTION_KEY,
-
-    decryptionKey: process.env.NEXT_JWT_ENCRYPTION_KEY,
-    decryptionOptions: { algorithms: ["A256GCM"] },
   },
-});
+};
+
+export default NextAuth(authOptions);
 
 /**
  * Takes a token, and returns a new token with updated

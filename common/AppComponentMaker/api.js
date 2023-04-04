@@ -1,10 +1,12 @@
-import { getSession } from "next-auth/react";
+import { authOptions } from "pages/api/auth/[...nextauth]";
+import { getServerSession } from "next-auth/next";
 import Cors from "cors";
 
 // Load the AWS SDK for Node.js
 import { DynamoDB } from "aws-sdk";
 const REGION = "us-east-1"; //e.g. "us-east-1"
 const TableName = "AsanaToolboxAppComponents";
+console.log(authOptions);
 
 // Create the DynamoDB service object
 const ddb = new DynamoDB.DocumentClient({
@@ -37,16 +39,19 @@ async function applyCors(req, res, fn) {
 const api = async (req, res) => {
   let session;
   try {
-    session = await getSession({ req });
+    session = await getServerSession(req, res, authOptions);
+    console.log("session : ", session);
   } catch (error) {
-    console.log(error);
+    console.log("error : ", error);
   }
+
   await applyCors(req, res, cors);
   const route = req.query.all;
   let user_gid = req?.query?.user;
   let workspace_gid = req?.query?.workspace;
 
-  let reqData = JSON.parse(req.body?.data || "{}");
+  let reqData = req.body || {};
+  console.log("reqdata");
   console.log(reqData);
   if (!user_gid) {
     user_gid = reqData?.user;
@@ -55,9 +60,13 @@ const api = async (req, res) => {
     workspace_gid = reqData?.workspace;
   }
 
+  [user_gid, workspace_gid] = [String(user_gid), String(workspace_gid)];
+
   //routes:  hi, rule-form, rule-submit,rule-run, get form, form-submit,
   if (route.length > 1) {
     if (route[1] == "config") {
+      let userworkspaceid = user_gid + workspace_gid;
+      console.log(userworkspaceid);
       if (session && session.user.gid && session.user.gid == user_gid) {
         if (req.method == "GET") {
           try {
@@ -65,7 +74,7 @@ const api = async (req, res) => {
               .get({
                 TableName: TableName,
                 Key: {
-                  userworkspace: user_gid + workspace_gid,
+                  userworkspace: userworkspaceid,
                 },
               })
               .promise();
@@ -176,17 +185,16 @@ const api = async (req, res) => {
     } else if (route[1] == "rule-submit") {
       res.status(200).send();
     } else if (route[1] == "rule-run") {
+      let userworkspaceid = user_gid + workspace_gid;
       try {
         let item = await ddb
           .get({
             TableName: TableName,
             Key: {
-              userworkspace: `${user_gid}${workspace_gid}`,
+              userworkspace: userworkspaceid,
             },
           })
           .promise();
-
-        console.log("rule run");
         res.json({
           action_result: "ok",
           resources_created: [item.Item?.config?.attachment || {}],
@@ -219,10 +227,6 @@ const api = async (req, res) => {
     } else if (route[1] == "form-submit") {
       res.status(200).send();
     } else if (route[1] == "attach") {
-      console.log("attach");
-      console.log(user_gid);
-      console.log(workspace_gid);
-      console.log(req.body);
       try {
         let item = await ddb
           .get({
