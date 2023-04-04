@@ -196,7 +196,7 @@ const api = async (req, res) => {
           })
           .promise();
         res.json({
-          action_result: "ok",
+          action_result: "resources_created",
           resources_created: [item.Item?.config?.attachment || {}],
         });
       } catch (error) {
