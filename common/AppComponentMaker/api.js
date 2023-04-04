@@ -50,7 +50,7 @@ const api = async (req, res) => {
   let user_gid = req?.query?.user;
   let workspace_gid = req?.query?.workspace;
 
-  let reqData = req.body || {};
+  let reqData = req.body?.data || {};
   console.log("reqdata");
   console.log(reqData);
   if (!user_gid) {
