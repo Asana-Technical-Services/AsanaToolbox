@@ -195,9 +195,18 @@ const api = async (req, res) => {
             },
           })
           .promise();
+
+        console.log("rule-run");
+        console.log(item.Item?.config?.attachment);
+        console.log(item.Item?.config?.attachment || {});
         res.json({
           action_result: "resources_created",
-          resources_created: [item.Item?.config?.attachment || {}],
+          resources_created: [
+            {
+              resource_name: item.Item?.config?.attachment?.resource_name,
+              resource_url: item.Item?.config?.attachment?.resource_url,
+            },
+          ],
         });
       } catch (error) {
         console.log("error!");
