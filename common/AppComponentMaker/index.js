@@ -274,11 +274,13 @@ export default function Component() {
               </ul>
             </li>
             <li>
-              Finally, under "Install your app", add the authenication url:
+              Finally, under "OAuth" in the left bar, add the custom
+              authenication url:
               <br></br>
               "https://asana-toolbox.vercel.app/api/apps/AppComponentMaker/auth"
               <br />
-              and add your phoenix domain in "Add an organization"
+              Then, go to "Manage Distribution", choose "Specific Workspaces"
+              and select your Phonix Workspace
             </li>
           </ol>
         </details>
