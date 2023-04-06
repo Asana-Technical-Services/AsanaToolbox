@@ -275,11 +275,9 @@ const api = async (req, res) => {
     } else {
       res.status(404).send();
     }
+  } else {
+    res.status(200).send();
   }
-
-  res.status(200);
-
-  res.end();
 };
 
 export default api;
