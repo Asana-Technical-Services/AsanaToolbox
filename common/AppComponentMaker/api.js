@@ -61,7 +61,7 @@ const api = async (req, res) => {
   }
 
   [user_gid, workspace_gid] = [String(user_gid), String(workspace_gid)];
-
+  console.log([user_gid, workspace_gid]);
   //routes:  hi, rule-form, rule-submit,rule-run, get form, form-submit,
   if (route.length > 1) {
     if (route[1] == "config") {
@@ -185,13 +185,19 @@ const api = async (req, res) => {
     } else if (route[1] == "rule-submit") {
       res.status(200).send();
     } else if (route[1] == "rule-run") {
-      let userworkspaceid = user_gid + workspace_gid;
+      console.log({
+        TableName: TableName,
+        Key: {
+          userworkspace: user_gid + workspace_gid,
+        },
+      });
+
       try {
         let item = await ddb
           .get({
             TableName: TableName,
             Key: {
-              userworkspace: userworkspaceid,
+              userworkspace: user_gid + workspace_gid,
             },
           })
           .promise();
