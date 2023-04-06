@@ -178,7 +178,7 @@ const sampleRadioButton = {
   name: "Select the one that applies",
   options: [
     {
-      id: "radio_option_1",
+      id: "radio_option_0",
       label: "Radio Option 1",
     },
   ],

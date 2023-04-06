@@ -49,31 +49,21 @@ const api = async (req, res) => {
   const route = req.query.all;
   let user_gid = req?.query?.user;
   let workspace_gid = req?.query?.workspace;
-  console.log([user_gid, workspace_gid]);
 
   let reqData = {};
   try {
-    reqData = JSON.parse(req.body?.data || "{}") || {};
+    reqData = JSON.parse(req.body?.data || "{}");
   } catch (e) {
     console.log(e);
   }
-  console.log("reqdata");
-  console.log(reqData);
-  console.log(typeof reqData);
-  console.log(reqData.user);
-  console.log(reqData.workspace);
   if (!user_gid || user_gid == undefined) {
-    console.log("user set");
     user_gid = reqData?.user;
   }
   if (!workspace_gid || user_gid == undefined) {
-    console.log("workplace set");
-
     workspace_gid = reqData?.workspace;
   }
 
   [user_gid, workspace_gid] = [String(user_gid), String(workspace_gid)];
-  console.log([user_gid, workspace_gid]);
   //routes:  hi, rule-form, rule-submit,rule-run, get form, form-submit,
   if (route.length > 1) {
     if (route[1] == "config") {
@@ -197,13 +187,6 @@ const api = async (req, res) => {
     } else if (route[1] == "rule-submit") {
       res.status(200).send();
     } else if (route[1] == "rule-run") {
-      console.log({
-        TableName: TableName,
-        Key: {
-          userworkspace: user_gid + workspace_gid,
-        },
-      });
-
       try {
         let item = await ddb
           .get({
@@ -214,9 +197,6 @@ const api = async (req, res) => {
           })
           .promise();
 
-        console.log("rule-run");
-        console.log(item);
-        console.log(item.Item?.config?.attachment);
         res.json({
           action_result: "resources_created",
           resources_created: [

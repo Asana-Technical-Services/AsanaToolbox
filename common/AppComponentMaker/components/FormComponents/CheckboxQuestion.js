@@ -62,7 +62,7 @@ const CheckboxQuestion = ({ updateField, field }) => {
       />
       <Typography variant="h6"> Field Options: </Typography>
       {field.options.map((option, index) => (
-        <div key={option.label + index}>
+        <div key={field.id + "dropdown_option_" + index}>
           <hr></hr>
           <TextField
             margin="normal"

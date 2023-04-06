@@ -36,7 +36,7 @@ const FormBuilder = ({ initJson, param, save }) => {
     let newArray = [...currentJson.metadata.fields];
     newArray.push({
       name: "Multi-line text field",
-      id: `field_${newArray.length + 1}`,
+      id: `field_${newArray.length}`,
       placeholder: "Type something...",
       type: "multi_line_text",
       value: "",

@@ -377,7 +377,7 @@ export default function Component() {
               />
             </div>
             <div>
-              <b>Attachment</b>
+              <Typography variant="h3">Attachment</Typography>
               <p>
                 Edit the config below to set your attachment name and reference
                 URL, then hit save. This will be the name of the "resource" that
@@ -397,7 +397,7 @@ export default function Component() {
             </div>
 
             <div>
-              <b>Modal Form</b>
+              <Typography variant="h3">Modal Form</Typography>
               <p>
                 Edit the config below to add fields to your form, then hit save.
                 To see a live preview, open your app in your Asana environment.
@@ -417,7 +417,7 @@ export default function Component() {
               />
             </div>
             <div>
-              <b>Rule Form</b>
+              <Typography variant="h3">Rule Form</Typography>
               <p>
                 Edit the config below to configure your Rule form, then hit
                 save. To see a live preview, open the rule builder in Asana for
@@ -475,25 +475,21 @@ const defaultLookup = {
       title: "Item title",
       subtitle: "Item subtitle",
       value: "searchResult1",
-      icon_url: "https://www.fillmurray.com/16/16",
     },
     {
       title: "Item title",
       subtitle: "Item subtitle",
       value: "searchResult2",
-      icon_url: "https://www.fillmurray.com/16/16",
     },
     {
       title: "Item title",
       subtitle: "Item subtitle",
       value: "searchResult3",
-      icon_url: "https://www.fillmurray.com/16/16",
     },
     {
       title: "Item title",
       subtitle: "Item subtitle",
       value: "searchResult4",
-      icon_url: "https://www.fillmurray.com/16/16",
     },
   ],
 };
