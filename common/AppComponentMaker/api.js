@@ -49,14 +49,20 @@ const api = async (req, res) => {
   const route = req.query.all;
   let user_gid = req?.query?.user;
   let workspace_gid = req?.query?.workspace;
+  console.log([user_gid, workspace_gid]);
 
   let reqData = req.body?.data || {};
   console.log("reqdata");
   console.log(reqData);
-  if (!user_gid) {
+  console.log(reqData.user);
+  console.log(reqData.workspace);
+  if (!user_gid || user_gid == undefined) {
+    console.log("user set");
     user_gid = reqData?.user;
   }
-  if (!workspace_gid) {
+  if (!workspace_gid || user_gid == undefined) {
+    console.log("workplace set");
+
     workspace_gid = reqData?.workspace;
   }
 
