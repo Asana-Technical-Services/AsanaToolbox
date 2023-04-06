@@ -51,14 +51,9 @@ const api = async (req, res) => {
   let workspace_gid = req?.query?.workspace;
   console.log([user_gid, workspace_gid]);
 
-  let reqData = req.body?.data || {};
+  let reqData = JSON.parse(req.body?.data) || {};
   console.log("reqdata");
   console.log(reqData);
-  try {
-    console.log(JSON.parse(reqData));
-  } catch (error) {
-    console.log(error);
-  }
   console.log(typeof reqData);
   console.log(reqData.user);
   console.log(reqData.workspace);
