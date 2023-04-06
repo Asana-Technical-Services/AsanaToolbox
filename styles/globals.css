@@ -847,6 +847,10 @@ video {
   list-style-type: disc;
 }
 
+.list-none {
+  list-style-type: none;
+}
+
 .grid-flow-row {
   grid-auto-flow: row;
 }
@@ -1067,12 +1071,28 @@ video {
   padding-bottom: 1rem;
 }
 
+.pl-5 {
+  padding-left: 1.25rem;
+}
+
+.pl-6 {
+  padding-left: 1.5rem;
+}
+
 .pt-12 {
   padding-top: 3rem;
 }
 
 .pt-24 {
   padding-top: 6rem;
+}
+
+.pl-8 {
+  padding-left: 2rem;
+}
+
+.pl-10 {
+  padding-left: 2.5rem;
 }
 
 .text-right {
@@ -1287,6 +1307,7 @@ a {
 
 .red {
   color: red;
+  background-color: white;
 }
 
 .widgetform {
@@ -1310,4 +1331,9 @@ a {
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
+}
+
+.hover\:bg-gray-100:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(243 244 246 / var(--tw-bg-opacity));
 }

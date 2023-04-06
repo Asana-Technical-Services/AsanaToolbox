@@ -61,6 +61,7 @@ const FormBuilder = ({ initJson, param, save }) => {
     <div>
       <div className="block m-5"></div>
       <TextField
+        size="small"
         margin="normal"
         required
         className="full-width"

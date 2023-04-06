@@ -9,6 +9,7 @@ import {
   InputLabel,
   Typography,
 } from "@mui/material";
+import ClearIcon from "@mui/icons-material/Clear";
 
 const CheckboxQuestion = ({ updateField, field }) => {
   const updateOptionLabel = (index, value) => {
@@ -43,12 +44,15 @@ const CheckboxQuestion = ({ updateField, field }) => {
       <TextField
         margin="normal"
         id="outlined-text"
+        size="small"
         label="Question Name"
         className="half-width"
         value={field.name}
         onChange={(e) => updateField("name", e.target.value)}
       />
       <FormControlLabel
+        variant="standard"
+        size="small"
         label="Required?"
         control={
           <Checkbox
@@ -60,38 +64,36 @@ const CheckboxQuestion = ({ updateField, field }) => {
           />
         }
       />
-      <Typography variant="h6"> Field Options: </Typography>
-      {field.options.map((option, index) => (
-        <div key={field.id + "dropdown_option_" + index}>
-          <hr></hr>
-          <TextField
-            margin="normal"
-            id="outlined-text"
-            label="Option Name"
-            className="half-width"
-            value={option.label}
-            onChange={(e) => updateOptionLabel(index, e.target.value)}
-          />
+      <ul className="list-none pl-6">
+        {field.options.map((option, index) => (
+          <li key={field.id + "dropdown_option_" + index} className="pl-5">
+            {"– "}
+            <input
+              margin="normal"
+              id="outlined-text"
+              className="half-width hover:bg-gray-100"
+              value={option.label}
+              onChange={(e) => updateOptionLabel(index, e.target.value)}
+            />
+            <button margin="normal" onClick={() => deleteOption(index)}>
+              <ClearIcon />
+            </button>
+          </li>
+        ))}
+        <li className="pl-10">
           <Button
             margin="normal"
-            fullWidth
-            className="red"
-            onClick={() => deleteOption(index)}
+            size="small"
+            className=" text-blue-500"
+            onClick={() => addOption()}
           >
-            Delete option
+            + add option
           </Button>
-        </div>
-      ))}
-      <Button
-        margin="normal"
-        fullWidth
-        className=" text-blue-500"
-        onClick={() => addOption()}
-      >
-        + add option
-      </Button>
+        </li>
+      </ul>
+
       {field.type === "dropdown" && (
-        <FormControl className="full-width">
+        <FormControl variant="standard" size="small" className="full-width">
           <InputLabel
             id={"field-width-label" + field.id}
             htmlFor={"field-type-simple-select" + field.id}

@@ -5,9 +5,10 @@
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.234.0",
     "@codemirror/lang-json": "^6.0.1",
-    "@emotion/react": "^11.10.4",
-    "@emotion/styled": "^11.10.4",
-    "@mui/material": "^5.10.3",
+    "@emotion/react": "^11.10.6",
+    "@emotion/styled": "^11.10.6",
+    "@mui/icons-material": "^5.11.16",
+    "@mui/material": "^5.11.16",
     "@uiw/react-codemirror": "^4.19.5",
     "aws-sdk": "^2.1282.0",
     "axios": "^0.27.2",

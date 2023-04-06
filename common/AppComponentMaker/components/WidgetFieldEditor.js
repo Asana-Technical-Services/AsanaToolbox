@@ -46,7 +46,7 @@ const WidgetFieldEditor = ({ index, field, updateField, deleteField }) => {
         fullWidth
         className="widgetform py-4 px-2 border-l-gray-300 border-l-2"
       >
-        <FormControl fullWidth className="half-width">
+        <FormControl fullWidth className="half-width" size="small">
           <InputLabel
             id={"field-type-label-" + index}
             htmlFor={"field-type-simple-select" + index}
@@ -57,6 +57,7 @@ const WidgetFieldEditor = ({ index, field, updateField, deleteField }) => {
           <Select
             margin="normal"
             label="Field Type"
+            size="small"
             className="half-width"
             labelId={"field-type-label-" + index}
             id={"field-type-simple-select" + index}
@@ -72,11 +73,12 @@ const WidgetFieldEditor = ({ index, field, updateField, deleteField }) => {
           className="full-width"
           id={"outlined-name" + index}
           label="Name"
+          size="small"
           required
           value={field.name}
           onChange={(e) => handleUpdate("name", e.target.value)}
         />
-        <FormControl margin="normal" className="half-width">
+        <FormControl margin="normal" className="half-width" size="small">
           <InputLabel id={"color-simple-select-label" + index}>
             color
           </InputLabel>
@@ -107,6 +109,7 @@ const WidgetFieldEditor = ({ index, field, updateField, deleteField }) => {
         </FormControl>
         <TextField
           margin="normal"
+          size="small"
           id="outlined-text"
           label="Text"
           className="half-width"
@@ -126,7 +129,7 @@ const WidgetFieldEditor = ({ index, field, updateField, deleteField }) => {
   } else if (field.type === "text_with_icon") {
     return (
       <div className="widgetform py-4  px-2 border-l-gray-300 border-l-2">
-        <FormControl fullWidth className="half-width">
+        <FormControl fullWidth className="half-width" size="small">
           <InputLabel
             id={"field-type-label-" + index}
             htmlFor={"field-type-simple-select" + index}
@@ -151,6 +154,7 @@ const WidgetFieldEditor = ({ index, field, updateField, deleteField }) => {
           margin="normal"
           id={"outlined-name" + index}
           className="full-width"
+          size="small"
           required
           label="Name"
           value={field.name}
@@ -158,6 +162,7 @@ const WidgetFieldEditor = ({ index, field, updateField, deleteField }) => {
         />
         <TextField
           margin="normal"
+          size="small"
           className="half-width"
           id={"icon_url_field" + index}
           label="Icon Url (optional)"
@@ -168,6 +173,7 @@ const WidgetFieldEditor = ({ index, field, updateField, deleteField }) => {
         <TextField
           margin="normal"
           className="half-width"
+          size="small"
           id={"outlined-text" + index}
           label="Text"
           value={field.text}

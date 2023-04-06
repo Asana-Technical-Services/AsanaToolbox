@@ -56,7 +56,7 @@ const FormFieldBuilder = ({ index, field, updateField, deleteField }) => {
 
   return (
     <div fullWidth className=" py-4 px-2 border-l-gray-300 border-l-2">
-      <FormControl fullWidth>
+      <FormControl variant="standard" size="small" fullWidth>
         <InputLabel
           id={"field-type-label-" + index}
           htmlFor={"field-type-simple-select" + index}
@@ -113,6 +113,7 @@ const FormFieldBuilder = ({ index, field, updateField, deleteField }) => {
       )}
       <Button
         margin="normal"
+        size="small"
         fullWidth
         className="red"
         onClick={() => deleteField(index)}

@@ -56,6 +56,7 @@ const LookupBuilder = ({ initJson, save }) => {
       <TextField
         margin="normal"
         required
+        size="small"
         className="full-width"
         label="List Header (optional)"
         value={currentJson.header}
@@ -67,6 +68,7 @@ const LookupBuilder = ({ initJson, save }) => {
       {currentJson.items.map((item, index) => (
         <div key={index}>
           <TextField
+            size="small"
             margin="normal"
             required
             className="full-width"
@@ -77,6 +79,7 @@ const LookupBuilder = ({ initJson, save }) => {
           <TextField
             margin="normal"
             required
+            size="small"
             className="full-width"
             label="List item subtitle (optional)"
             value={item.subtitle}

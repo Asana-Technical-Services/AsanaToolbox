@@ -70,6 +70,7 @@ const WidgetBulder = ({ initJson, param, save }) => {
       <TextField
         margin="normal"
         required
+        size="small"
         className="full-width"
         label="Resource Name"
         value={currentJson.metadata.title}
@@ -78,6 +79,7 @@ const WidgetBulder = ({ initJson, param, save }) => {
       <TextField
         margin="normal"
         className="half-width"
+        size="small"
         label="subtitle icon url"
         onChange={(e) => updateJson("subicon_url", e.target.value)}
         value={currentJson.metadata.subicon_url || ""}
@@ -86,6 +88,7 @@ const WidgetBulder = ({ initJson, param, save }) => {
         margin="normal"
         label="subtitle"
         className="half-width"
+        size="small"
         value={currentJson.metadata.subtitle || ""}
         onChange={(e) => updateJson("subtitle", e.target.value)}
       />
@@ -115,6 +118,7 @@ const WidgetBulder = ({ initJson, param, save }) => {
         margin="normal"
         className="full-width"
         label="footer text"
+        size="small"
         value={currentJson.metadata.footer.text || ""}
         onChange={(e) => updateFooter("text", e.target.value)}
       />
@@ -122,15 +126,18 @@ const WidgetBulder = ({ initJson, param, save }) => {
         margin="normal"
         label="Footer icon url (optional)"
         className="half-width"
+        size="small"
         onChange={(e) => updateFooter("icon_url", e.target.value)}
         value={currentJson.metadata.footer.icon_url || ""}
       />
       <TextField
         margin="normal"
         className="half-width"
+        size="small"
+        type="number"
         label="Number of Comments (optional)"
-        onChange={(e) => updateFooter("num_comments", e.target.value)}
-        value={currentJson.metadata.footer.num_comments || ""}
+        onChange={(e) => updateJson("num_comments", Number(e.target.value))}
+        value={currentJson.metadata.num_comments || ""}
       />
       <div className="m-5 flex">
         <Button

@@ -29,6 +29,7 @@ const AttachmentBuilder = ({ initJson, save }) => {
       <TextField
         margin="normal"
         required
+        size="small"
         className="full-width"
         label="resource name"
         value={currentJson.resource_name}
@@ -37,6 +38,7 @@ const AttachmentBuilder = ({ initJson, save }) => {
       <TextField
         margin="normal"
         required
+        size="small"
         className="full-width"
         label="resource url"
         value={currentJson.resource_url}

@@ -18,6 +18,7 @@ const GenericQuestion = ({ updateField, field }) => {
         margin="normal"
         id="outlined-text"
         label="Question Name"
+        size="small"
         className="half-width"
         value={field.name}
         onChange={(e) => updateField("name", e.target.value)}
@@ -36,7 +37,7 @@ const GenericQuestion = ({ updateField, field }) => {
       />
 
       {field.type === "single_line_text" && (
-        <FormControl className="full-width">
+        <FormControl className="full-width" size="small">
           <InputLabel
             id={"field-width-label" + field.id}
             htmlFor={"field-type-simple-select" + field.id}
