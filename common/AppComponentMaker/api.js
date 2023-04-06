@@ -54,6 +54,12 @@ const api = async (req, res) => {
   let reqData = req.body?.data || {};
   console.log("reqdata");
   console.log(reqData);
+  try {
+    console.log(JSON.parse(reqData));
+  } catch (error) {
+    console.log(error);
+  }
+  console.log(typeof reqData);
   console.log(reqData.user);
   console.log(reqData.workspace);
   if (!user_gid || user_gid == undefined) {
