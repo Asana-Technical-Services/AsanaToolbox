@@ -23,7 +23,7 @@ const CheckboxQuestion = ({ updateField, field }) => {
     let tempOptions = [...field.options];
     tempOptions.splice(index, 1);
     tempOptions = tempOptions.map((field, index) => {
-      field.id = `field_option_${index}`;
+      field.id = `${field.id}_field_option_${index}`;
       return field;
     });
     updateField("options", tempOptions);
@@ -33,7 +33,7 @@ const CheckboxQuestion = ({ updateField, field }) => {
     let tempOptions = [...field.options];
 
     tempOptions.push({
-      id: `field_option_${tempOptions.length}`,
+      id: `${field.id}_field_option_${tempOptions.length}`,
       label: "new option",
     });
     updateField("options", tempOptions);
@@ -66,7 +66,7 @@ const CheckboxQuestion = ({ updateField, field }) => {
       />
       <ul className="list-none pl-6">
         {field.options.map((option, index) => (
-          <li key={field.id + "dropdown_option_" + index} className="pl-5">
+          <li key={field.id + "_dropdown_option_" + index} className="pl-5">
             {"– "}
             <input
               margin="normal"

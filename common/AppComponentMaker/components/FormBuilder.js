@@ -15,8 +15,13 @@ const FormBuilder = ({ initJson, param, save }) => {
   };
 
   const updateField = ({ index, field }) => {
+    console.log(index, field);
+
     let tempJson = { ...currentJson };
+    console.log([...tempJson.metadata.fields]);
+
     tempJson.metadata.fields[index] = field;
+    console.log(tempJson);
     setCurrentJson(tempJson);
   };
 
@@ -73,7 +78,7 @@ const FormBuilder = ({ initJson, param, save }) => {
       <Typography variant="h5">Fields:</Typography>
       <hr></hr>
       {currentJson.metadata.fields.map((field, index) => (
-        <div key={index}>
+        <div key={"form_field_builder_" + index}>
           <FormFieldBuilder
             field={field}
             index={index}

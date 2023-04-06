@@ -21,31 +21,31 @@ const FormFieldBuilder = ({ index, field, updateField, deleteField }) => {
     let newField = {};
     if (type !== field.type) {
       if (type === "checkbox") {
-        newField = sampleCheckbox;
+        newField = { ...sampleCheckbox };
         newField.id = field.id;
       } else if (type === "date") {
-        newField = sampleDate;
+        newField = { ...sampleDate };
         newField.id = field.id;
       } else if (type === "datetime") {
-        newField = sampleDateTime;
+        newField = { ...sampleDateTime };
         newField.id = field.id;
       } else if (type === "dropdown") {
-        newField = sampleDropdown;
+        newField = { ...sampleDropdown };
         newField.id = field.id;
       } else if (type === "multi_line_text") {
-        newField = sampleMultiLineText;
+        newField = { ...sampleMultiLineText };
         newField.id = field.id;
       } else if (type === "radio_button") {
-        newField = sampleRadioButton;
+        newField = { ...sampleRadioButton };
         newField.id = field.id;
       } else if (type === "rich_text") {
-        newField = sampleRichText;
+        newField = { ...sampleRichText };
         newField.id = field.id;
       } else if (type === "single_line_text") {
-        newField = sampleSingleLineText;
+        newField = { ...sampleSingleLineText };
         newField.id = field.id;
       } else if (type === "static_text") {
-        newField = sampleStaticText;
+        newField = { ...sampleStaticText };
         newField.id = field.id;
       }
 
@@ -53,6 +53,87 @@ const FormFieldBuilder = ({ index, field, updateField, deleteField }) => {
     }
   };
   console.log(field.type);
+
+  const sampleCheckbox = {
+    is_required: false,
+    name: "select all that apply",
+    options: [
+      {
+        id: "opt-in" + index,
+        label: "Opt in",
+      },
+    ],
+    type: "checkbox",
+    value: [],
+  };
+
+  const sampleDate = {
+    is_required: false,
+    name: "Due Date",
+    type: "date",
+    value: "",
+  };
+
+  const sampleDateTime = {
+    is_required: false,
+    name: "Due Date and Time",
+    type: "datetime",
+    value: "",
+  };
+
+  const sampleDropdown = {
+    is_required: false,
+    name: "Select from the following:",
+    options: [
+      {
+        id: "red" + index,
+        label: "Red",
+      },
+    ],
+    type: "dropdown",
+    value: "",
+    width: "full",
+  };
+
+  const sampleMultiLineText = {
+    is_required: false,
+    name: "Describe your request",
+    type: "multi_line_text",
+    value: "",
+  };
+
+  const sampleRadioButton = {
+    is_required: false,
+    name: "Select the one that applies",
+    options: [
+      {
+        id: "radio_option_0" + index,
+        label: "Radio Option 1",
+      },
+    ],
+    type: "radio_button",
+    value: "",
+  };
+
+  const sampleRichText = {
+    is_required: false,
+    name: "Describe your Ask in Rich Text",
+    type: "rich_text",
+    value: "",
+  };
+
+  const sampleSingleLineText = {
+    is_required: false,
+    name: "your name",
+    type: "single_line_text",
+    value: "",
+    width: "full",
+  };
+
+  const sampleStaticText = {
+    name: "Please enter the following details:",
+    type: "static_text",
+  };
 
   return (
     <div fullWidth className=" py-4 px-2 border-l-gray-300 border-l-2">
@@ -125,84 +206,3 @@ const FormFieldBuilder = ({ index, field, updateField, deleteField }) => {
 };
 
 export default FormFieldBuilder;
-
-const sampleCheckbox = {
-  is_required: false,
-  name: "select all that apply",
-  options: [
-    {
-      id: "opt-in",
-      label: "Opt in",
-    },
-  ],
-  type: "checkbox",
-  value: [],
-};
-
-const sampleDate = {
-  is_required: false,
-  name: "Due Date",
-  type: "date",
-  value: "",
-};
-
-const sampleDateTime = {
-  is_required: false,
-  name: "Due Date and Time",
-  type: "datetime",
-  value: "",
-};
-
-const sampleDropdown = {
-  is_required: false,
-  name: "Select from the following:",
-  options: [
-    {
-      id: "red",
-      label: "Red",
-    },
-  ],
-  type: "dropdown",
-  value: "",
-  width: "full",
-};
-
-const sampleMultiLineText = {
-  is_required: false,
-  name: "Describe your request",
-  type: "multi_line_text",
-  value: "",
-};
-
-const sampleRadioButton = {
-  is_required: false,
-  name: "Select the one that applies",
-  options: [
-    {
-      id: "radio_option_0",
-      label: "Radio Option 1",
-    },
-  ],
-  type: "radio_button",
-  value: "",
-};
-
-const sampleRichText = {
-  is_required: false,
-  name: "Describe your Ask in Rich Text",
-  type: "rich_text",
-  value: "",
-};
-
-const sampleSingleLineText = {
-  is_required: false,
-  name: "your name",
-  type: "single_line_text",
-  value: "",
-  width: "full",
-};
-
-const sampleStaticText = {
-  name: "Please enter the following details:",
-  type: "static_text",
-};
