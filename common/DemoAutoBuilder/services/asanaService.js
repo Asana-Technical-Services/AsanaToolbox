@@ -192,7 +192,9 @@ async function buildTree(client, workspaceGid, parentPortfolioData) {
     );
     success = true;
   } catch (error) {
-    /* TODO: Handle error */
+    const errorMessage = `Error building Work Graph objects: ${error}`;
+    console.log(errorMessage);
+    return { success, error: errorMessage };
   }
   return { success, url: parentPortfolio?.permalink_url };
 }

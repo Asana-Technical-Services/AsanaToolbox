@@ -29,7 +29,6 @@ async function handler(req, res) {
   try {
     session = await getServerSession(req, res, authOptions);
     console.log('session: ', session);
-    console.log('access_token: ', session);
   } catch (error) {
     console.log('error: ', error);
   }
@@ -47,6 +46,13 @@ async function handler(req, res) {
       data: reqData,
     });
   }
+  if (!session?.user?.gid) {
+    res.status(400).json({
+      error: 'Invalid user session data',
+      data: session,
+    });
+  }
+
   if (route[1] === 'build') {
     console.log(
       `Triggering 'build' route endpoint with reqData: ${JSON.stringify(

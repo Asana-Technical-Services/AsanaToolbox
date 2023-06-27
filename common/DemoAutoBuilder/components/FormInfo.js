@@ -16,15 +16,13 @@ function FormInfo() {
         If you have any questions, feel free to reach out to Andrew Williams on
         Slack! Feel free to leave any feedback in this task:
       </Typography>
-      <Link href="https://app.asana.com/0/0/1204507575048663/f">
-        <List>
-          <ListItem>
-            <Link href="https://app.asana.com/0/0/1204507575048663/f">
-              https://app.asana.com/0/0/1204507575048663/f
-            </Link>
-          </ListItem>
-        </List>
-      </Link>
+      <List>
+        <ListItem>
+          <Link href="https://app.asana.com/0/0/1204507575048663/f">
+            https://app.asana.com/0/0/1204507575048663/f
+          </Link>
+        </ListItem>
+      </List>
     </div>
   );
 }
