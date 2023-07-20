@@ -1,5 +1,5 @@
-import { useSession } from 'next-auth/react';
-import { useState, useEffect } from 'react';
+import { useSession } from "next-auth/react";
+import { useState, useEffect } from "react";
 import {
   Button,
   FormControl,
@@ -10,9 +10,9 @@ import {
   TextField,
   Typography,
   LinearProgress,
-} from '@mui/material';
-import axios from 'axios';
-import FormInfo from './components/FormInfo';
+} from "@mui/material";
+import axios from "axios";
+import FormInfo from "./components/FormInfo";
 
 export default function SplashPage() {
   const { data: session } = useSession();
@@ -22,16 +22,16 @@ export default function SplashPage() {
   */
   // eslint-disable-next-line no-unused-vars
   const [ready, setReady] = useState(false);
-  const [workspace, setWorkspace] = useState('none');
+  const [workspace, setWorkspace] = useState("none");
   const [availableWorkspaces, setAvailableWorkspaces] = useState([]);
   const [formResponse, setFormResponse] = useState({
-    status: '',
-    status_message: '',
-    url: '',
+    status: "",
+    status_message: "",
+    url: "",
   });
   const [currentJson, setCurrentJson] = useState({
-    company_size: '',
-    project_type: '',
+    company_size: "",
+    project_type: "",
   });
 
   /* <any requests require you to specify a workspace, 
@@ -42,42 +42,102 @@ export default function SplashPage() {
     tempJson[index] = field;
     setCurrentJson(tempJson);
     setFormResponse({
-      status: '',
-      status_message: '',
-      url: '',
+      status: "",
+      status_message: "",
+      url: "",
     });
   };
 
   const submitJsonData = async () => {
     // eslint-disable-next-line camelcase
     const { company_size, industry, project_type, departments } = currentJson;
+
+    console.log(currentJson);
     // eslint-disable-next-line camelcase
     if (!company_size || !industry || !project_type || !departments) {
       setFormResponse({
-        status: 'error',
-        status_message: 'Please fill out all fields before submitting.',
+        status: "error",
+        status_message: "Please fill out all fields before submitting.",
       });
       return; // stops the function if any field is empty
     }
+    console.log("response ok");
 
     setFormResponse({
-      status: 'loading',
-      status_message: 'Building Demo Work Graph...',
+      status: "loading",
+      status_message: "Asking ChatGPT...",
     });
-    const response = await axios.post(
+
+    console.log("sending request");
+
+    const response = await fetch(
       `/api/apps/DemoAutoBuilder/build?user=${session.user.gid}&workspace=${workspace}`,
-      currentJson
+      {
+        method: "POST",
+        body: JSON.stringify(currentJson),
+      }
     );
-    let text = '';
-    let url = '';
-    let status = '';
-    if (response.statusText === 'OK') {
-      text = 'Build complete! Visit: ';
-      url = response?.data?.url;
-      status = 'complete';
+    
+    console.log("got response");
+    console.log(response);
+    if (!response.ok) {
+      console.log("not ok");
+      throw new Error("Failed to fetch");
+    }
+
+    const data = response.body;
+    if (!data) {
+      console.log("no data recieved");
+      throw new Error("No data received");
+      return;
+    }
+
+    const reader = data.getReader();
+    const decoder = new TextDecoder();
+    let done = false;
+    let tempValue = ""; // temporary value to store incomplete json strings
+
+    let url = "";
+    let text = "";
+    let status = "";
+    while (!done) {
+      console.log("starting loop");
+      const { value, done: doneReading } = await reader.read();
+      done = doneReading;
+      let chunkValue = decoder.decode(value);
+      console.log("tempValue: ", tempValue);
+      console.log("chunk: ", chunkValue);
+
+      // if there is a temp value, prepend it to the incoming chunk
+      if (tempValue) {
+        chunkValue = tempValue + chunkValue;
+        tempValue = "";
+      }
+      if (chunkValue.includes("building")) {
+        setFormResponse({
+          status: "loading",
+          status_message: "Building Work Graph...",
+        });
+      }
+      // match url string and extract it from the chunk
+      const match = chunkValue.match(/\{(.*?)\}/);
+      console.log(match);
+
+      if (match) {
+        url = match[1];
+        console.log("url: ", url);
+        false();
+      }
+
+      tempValue = chunkValue;
+    }
+
+    if (url !== "") {
+      text = "Build complete! Visit: ";
+      status = "complete";
     } else {
-      text = response?.statusText;
-      status = 'error';
+      text = "recieved an error";
+      status = "error";
     }
     setFormResponse({ status, status_message: text, url });
   };
@@ -97,7 +157,7 @@ export default function SplashPage() {
         // if we haven't already, get our available workspaces
         if (availableWorkspaces?.length === 0) {
           const response = await axios.get(
-            'https://app.asana.com/api/1.0/workspaces',
+            "https://app.asana.com/api/1.0/workspaces",
             { headers: { Authorization: `Bearer ${session.access_token}` } }
           );
           if (response?.data?.data) {
@@ -111,10 +171,10 @@ export default function SplashPage() {
 
   const handleWorkspaceChange = (e) => {
     const targetValue = e.target.value;
-    if (targetValue && targetValue !== 'none') {
+    if (targetValue && targetValue !== "none") {
       setWorkspace(targetValue);
     } else {
-      setWorkspace('none');
+      setWorkspace("none");
     }
   };
 
@@ -149,7 +209,7 @@ export default function SplashPage() {
         </FormControl>
       </div>
 
-      {workspace && workspace !== 'none' ? (
+      {workspace && workspace !== "none" ? (
         <FormControl>
           <Typography variant="h5">Configuration Questions</Typography>
           <p>
@@ -166,7 +226,7 @@ export default function SplashPage() {
               className="full-width"
               displayEmpty
               value={currentJson.company_size}
-              onChange={(e) => updateField('company_size', e.target.value)}
+              onChange={(e) => updateField("company_size", e.target.value)}
             >
               <MenuItem value="">Select one...</MenuItem>
               <MenuItem value="microbusiness">
@@ -196,7 +256,7 @@ export default function SplashPage() {
               label="Industry"
               size="small"
               className="half-width"
-              onChange={(e) => updateField('industry', e.target.value)}
+              onChange={(e) => updateField("industry", e.target.value)}
             />
           </div>
 
@@ -209,7 +269,7 @@ export default function SplashPage() {
               className="full-width"
               displayEmpty
               value={currentJson.project_type}
-              onChange={(e) => updateField('project_type', e.target.value)}
+              onChange={(e) => updateField("project_type", e.target.value)}
             >
               <MenuItem value="">Select one...</MenuItem>
               <MenuItem value="kanban">
@@ -235,7 +295,7 @@ export default function SplashPage() {
               label="Departments"
               size="small"
               className="full-width"
-              onChange={(e) => updateField('departments', e.target.value)}
+              onChange={(e) => updateField("departments", e.target.value)}
             />
           </div>
 
@@ -247,7 +307,7 @@ export default function SplashPage() {
       ) : null}
 
       <div className="m-5 flex flex-col items-center">
-        {formResponse.status === 'error' ? (
+        {formResponse.status === "error" ? (
           <Typography className="red text-lg mb-3">
             {formResponse.status_message}
           </Typography>
@@ -265,7 +325,7 @@ export default function SplashPage() {
             {formResponse.url}
           </Link>
         ) : null}
-        {formResponse.status && formResponse.status === 'loading' && (
+        {formResponse.status && formResponse.status === "loading" && (
           <LinearProgress color="secondary" className="mt-3 w-full" />
         )}
       </div>

@@ -1,10 +1,11 @@
 /* eslint-disable import/prefer-default-export */
 /* TODO: Remove above */
-import { getServerSession } from 'next-auth/next';
-import { authOptions } from '../../../pages/api/auth/[...nextauth]';
-import { buildWorkGraph, submitOpenAiPrompt } from '../services';
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "../../../pages/api/auth/[...nextauth]";
+import { buildWorkGraph, submitOpenAiPrompt } from "../services";
 
-export async function handleFormData(req, res) {
+export async function handleFormData(req, res, controller, encoder) {
+  console.log("started handle form");
   // const session = await getServerSession(req, res, authOptions);
   const session = await getServerSession(req, res, authOptions);
   const reqData = req?.body;
@@ -59,23 +60,31 @@ export async function handleFormData(req, res) {
     Simulate the "due_date"(s) for each task starting in this current date ${currentDate}. \
     Do not generate other text in your response aside from the JSON object itself. 
   `;
+  controller.enqueue(encoder.encode("starting - "));
+  console.log("sent starting");
 
   const response = await submitOpenAiPrompt(promptMessage);
+
   let parsedData;
   try {
     parsedData = JSON.parse(response);
   } catch (e) {
     /* TODO: Handle error */
+    controller.enqueue(encoder.encode("open AI failure "));
   }
   if (!parsedData) {
-    /* TODO: handle error */
+    controller.enqueue(encoder.encode("open AI failure "));
     return null;
   }
+  console.log("building graph");
+  controller.enqueue(encoder.encode("building graph "));
   console.log(JSON.stringify(parsedData));
   const returnObject = await buildWorkGraph(
     accessToken,
     workspaceGid,
     parsedData
   );
+  console.log("sending url");
+  controller.enqueue(encoder.encode(` url:{${returnObject.url}}`));
   return returnObject;
 }
