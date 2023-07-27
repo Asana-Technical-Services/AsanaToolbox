@@ -1,7 +1,12 @@
 import Cors from 'cors';
 import { getServerSession } from 'next-auth/next';
+import { NextResponse } from 'next/server';
 import { authOptions } from '../../pages/api/auth/[...nextauth]';
 import { handleFormData } from './controllers';
+
+export const config = {
+  runtime: 'edge', // this is a pre-requisite
+};
 
 /* Initializing the cors middleware
 You can read more about the available options here: https://github.com/expressjs/cors#configuration-options
@@ -60,11 +65,13 @@ async function handler(req, res) {
       )}`
     );
     const response = await handleFormData(req, res);
-    if (response) {
-      res.status(200).json(response);
-    }
+    return NextResponse.json(response);
+    // if (response) {
+    //   res.status(200).json(response);
+    // }
   }
-  res.status(200).json({});
+  return;
+  // res.status(200).json({});
 }
 
 export default handler;
