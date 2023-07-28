@@ -72,7 +72,7 @@ async function handler(req, res) {
         reqData
       )}`
     );
-    const response = await handleFormData(req, res);
+    const response = res.waitUntil(handleFormData(req, res));
     return NextResponse.json(response);
     // if (response) {
     //   res.status(200).json(response);
