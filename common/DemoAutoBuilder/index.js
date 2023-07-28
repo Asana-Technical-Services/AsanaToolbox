@@ -73,7 +73,7 @@ export default function SplashPage() {
       {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: currentJson,
+        body: JSON.stringify(currentJson),
       }
     );
     const responseJson = await response.json();
