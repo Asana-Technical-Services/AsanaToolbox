@@ -46,13 +46,21 @@ async function handler(req, res) {
     res.status(404).send();
   }
   if (!reqData) {
-    res.status(400).json({
+    // res.status(400).json({
+    //   error: 'Invalid request data sent',
+    //   data: reqData,
+    // });
+    return NextResponse.json({
       error: 'Invalid request data sent',
       data: reqData,
     });
   }
   if (!session?.user?.gid) {
-    res.status(400).json({
+    // res.status(400).json({
+    //   error: 'Invalid user session data',
+    //   data: session,
+    // });
+    return NextResponse.json({
       error: 'Invalid user session data',
       data: session,
     });
@@ -70,7 +78,7 @@ async function handler(req, res) {
     //   res.status(200).json(response);
     // }
   }
-  return;
+  return NextResponse.json({});
   // res.status(200).json({});
 }
 
