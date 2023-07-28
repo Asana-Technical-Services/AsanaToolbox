@@ -72,13 +72,14 @@ export default function SplashPage() {
       `/api/apps/DemoAutoBuilder/build?user=${session.user.gid}&workspace=${workspace}`,
       { method: 'POST', body: currentJson }
     );
+    const responseJson = await response.json();
     let text = '';
     let url = '';
     let status = '';
     if (response.statusText === 'OK') {
       text = 'Build complete! Visit: ';
       // url = response?.data?.url;
-      url = response?.body?.url;
+      url = responseJson?.url;
       status = 'complete';
     } else {
       text = response?.statusText;
@@ -112,8 +113,9 @@ export default function SplashPage() {
               headers: { Authorization: `Bearer ${session.access_token}` },
             }
           );
-          if (response?.body?.data) {
-            setAvailableWorkspaces(response.body.data);
+          const responseJson = await response.json();
+          if (responseJson?.data) {
+            setAvailableWorkspaces(responseJson?.data);
           }
           // if (response?.data?.data) {
           //   setAvailableWorkspaces(response.data.data);
