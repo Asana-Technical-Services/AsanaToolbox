@@ -12,6 +12,7 @@ import {
   LinearProgress,
 } from '@mui/material';
 // import axios from 'axios';
+import { application } from 'express';
 import FormInfo from './components/FormInfo';
 
 export default function SplashPage() {
@@ -70,7 +71,11 @@ export default function SplashPage() {
     // );
     const response = await fetch(
       `/api/apps/DemoAutoBuilder/build?user=${session.user.gid}&workspace=${workspace}`,
-      { method: 'POST', body: currentJson }
+      {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: currentJson,
+      }
     );
     const responseJson = await response.json();
     let text = '';
@@ -110,7 +115,10 @@ export default function SplashPage() {
             'https://app.asana.com/api/1.0/workspaces',
             {
               method: 'GET',
-              headers: { Authorization: `Bearer ${session.access_token}` },
+              headers: {
+                Authorization: `Bearer ${session.access_token}`,
+                'content-type': 'application/json',
+              },
             }
           );
           const responseJson = await response.json();
