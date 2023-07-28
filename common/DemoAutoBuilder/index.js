@@ -11,7 +11,7 @@ import {
   Typography,
   LinearProgress,
 } from '@mui/material';
-import axios from 'axios';
+// import axios from 'axios';
 import FormInfo from './components/FormInfo';
 
 export default function SplashPage() {
@@ -64,16 +64,26 @@ export default function SplashPage() {
       status: 'loading',
       status_message: 'Building Demo Work Graph...',
     });
-    const response = await axios.post(
+    // const response = await axios.post(
+    //   `/api/apps/DemoAutoBuilder/build?user=${session.user.gid}&workspace=${workspace}`,
+    //   currentJson
+    // );
+    const response = await fetch(
       `/api/apps/DemoAutoBuilder/build?user=${session.user.gid}&workspace=${workspace}`,
-      currentJson
+      {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: currentJson,
+      }
     );
+    const responseJson = await response.json();
     let text = '';
     let url = '';
     let status = '';
     if (response.statusText === 'OK') {
       text = 'Build complete! Visit: ';
-      url = response?.data?.url;
+      // url = response?.data?.url;
+      url = responseJson?.url;
       status = 'complete';
     } else {
       text = response?.statusText;
@@ -96,13 +106,27 @@ export default function SplashPage() {
 
         // if we haven't already, get our available workspaces
         if (availableWorkspaces?.length === 0) {
-          const response = await axios.get(
+          // const response = await axios.get(
+          //   'https://app.asana.com/api/1.0/workspaces',
+          //   { headers: { Authorization: `Bearer ${session.access_token}` } }
+          // );
+          const response = await fetch(
             'https://app.asana.com/api/1.0/workspaces',
-            { headers: { Authorization: `Bearer ${session.access_token}` } }
+            {
+              method: 'GET',
+              headers: {
+                Authorization: `Bearer ${session.access_token}`,
+                'content-type': 'application/json',
+              },
+            }
           );
-          if (response?.data?.data) {
-            setAvailableWorkspaces(response.data.data);
+          const responseJson = await response.json();
+          if (responseJson?.data) {
+            setAvailableWorkspaces(responseJson?.data);
           }
+          // if (response?.data?.data) {
+          //   setAvailableWorkspaces(response.data.data);
+          // }
         }
       }
     };
