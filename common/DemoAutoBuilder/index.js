@@ -12,7 +12,6 @@ import {
   LinearProgress,
 } from '@mui/material';
 // import axios from 'axios';
-import { application } from 'express';
 import FormInfo from './components/FormInfo';
 
 export default function SplashPage() {
