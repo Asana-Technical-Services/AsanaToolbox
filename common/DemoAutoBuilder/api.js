@@ -53,9 +53,9 @@ async function handler(req, res) {
   }
   let response;
   if (route[1] === 'build') {
-    res.setHeader('Content-Type', 'text/event-stream');
-    res.setHeader('Cache-Control', 'no-cache');
-    res.setHeader('Connection', 'keep-alive');
+    // res.setHeader('Content-Type', 'text/event-stream');
+    // res.setHeader('Cache-Control', 'no-cache');
+    // res.setHeader('Connection', 'keep-alive');
     res.write('data: Initializing...\n\n');
     console.log(
       `Triggering 'build' route endpoint with reqData: ${JSON.stringify(
