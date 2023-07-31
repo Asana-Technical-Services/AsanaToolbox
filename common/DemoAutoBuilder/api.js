@@ -56,14 +56,14 @@ async function handler(req, res) {
       data: session,
     });
   }
-
+  let response;
   if (route[1] === 'build') {
     console.log(
       `Triggering 'build' route endpoint with reqData: ${JSON.stringify(
         reqData
       )}`
     );
-    const response = await handleFormData(req, res));
+    response = await handleFormData(req, res);
     if (response) {
       res.status(200).json(response);
     }
@@ -71,14 +71,14 @@ async function handler(req, res) {
   const data = {
     message: 'Server generated event data',
     timestamp: new Date(),
-    body: response
+    body: response,
   };
   const returnResponse = `data: ${JSON.stringify(data)}\n\n`;
-  console.log(`Server going to send event with payload: ${returnResponse}`)
-  
+  console.log(`Server going to send event with payload: ${returnResponse}`);
+
   setInterval(() => {
     res.write(returnResponse);
-  }, 5000);  // Push data every 5 seconds for example
+  }, 5000); // Push data every 5 seconds for example
 
   req.on('close', () => {
     clearInterval(this);
