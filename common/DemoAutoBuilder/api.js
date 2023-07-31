@@ -75,9 +75,9 @@ async function handler(req, res) {
   const returnResponse = `data: ${JSON.stringify(data)}\n\n`;
   console.log(`Server going to send event with payload: ${returnResponse}`);
 
-  const intervalId = setInterval(() => {
-    res.write(returnResponse);
-  }, 5000); // Push data every 5 seconds for example
+  // const intervalId = setInterval(() => {
+  //   res.write(returnResponse);
+  // }, 5000); // Push data every 5 seconds for example
 
   req.on('close', () => {
     clearInterval(intervalId);
