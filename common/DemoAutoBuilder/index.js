@@ -11,7 +11,7 @@ import {
   Typography,
   LinearProgress,
 } from '@mui/material';
-// import axios from 'axios';
+import axios from 'axios';
 import FormInfo from './components/FormInfo';
 
 export default function SplashPage() {
@@ -64,26 +64,26 @@ export default function SplashPage() {
       status: 'loading',
       status_message: 'Building Demo Work Graph...',
     });
-    // const response = await axios.post(
-    //   `/api/apps/DemoAutoBuilder/build?user=${session.user.gid}&workspace=${workspace}`,
-    //   currentJson
-    // );
-    const response = await fetch(
+    const response = await axios.post(
       `/api/apps/DemoAutoBuilder/build?user=${session.user.gid}&workspace=${workspace}`,
-      {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify(currentJson),
-      }
+      currentJson
     );
-    const responseJson = await response.json();
+    // const response = await fetch(
+    //   `/api/apps/DemoAutoBuilder/build?user=${session.user.gid}&workspace=${workspace}`,
+    //   {
+    //     method: 'POST',
+    //     headers: { 'content-type': 'application/json' },
+    //     body: JSON.stringify(currentJson),
+    //   }
+    // );
+    // const responseJson = await response.json();
     let text = '';
     let url = '';
     let status = '';
     if (response.statusText === 'OK') {
       text = 'Build complete! Visit: ';
-      // url = response?.data?.url;
-      url = responseJson?.url;
+      url = response?.data?.url;
+      // url = responseJson?.url;
       status = 'complete';
     } else {
       text = response?.statusText;
@@ -106,27 +106,27 @@ export default function SplashPage() {
 
         // if we haven't already, get our available workspaces
         if (availableWorkspaces?.length === 0) {
-          // const response = await axios.get(
-          //   'https://app.asana.com/api/1.0/workspaces',
-          //   { headers: { Authorization: `Bearer ${session.access_token}` } }
-          // );
-          const response = await fetch(
+          const response = await axios.get(
             'https://app.asana.com/api/1.0/workspaces',
-            {
-              method: 'GET',
-              headers: {
-                Authorization: `Bearer ${session.access_token}`,
-                'content-type': 'application/json',
-              },
-            }
+            { headers: { Authorization: `Bearer ${session.access_token}` } }
           );
-          const responseJson = await response.json();
-          if (responseJson?.data) {
-            setAvailableWorkspaces(responseJson?.data);
-          }
-          // if (response?.data?.data) {
-          //   setAvailableWorkspaces(response.data.data);
+          // const response = await fetch(
+          //   'https://app.asana.com/api/1.0/workspaces',
+          //   {
+          //     method: 'GET',
+          //     headers: {
+          //       Authorization: `Bearer ${session.access_token}`,
+          //       'content-type': 'application/json',
+          //     },
+          //   }
+          // );
+          // const responseJson = await response.json();
+          // if (responseJson?.data) {
+          //   setAvailableWorkspaces(responseJson?.data);
           // }
+          if (response?.data?.data) {
+            setAvailableWorkspaces(response.data.data);
+          }
         }
       }
     };

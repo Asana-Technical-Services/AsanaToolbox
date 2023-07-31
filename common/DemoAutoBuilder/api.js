@@ -1,6 +1,5 @@
 import Cors from 'cors';
 import { getServerSession } from 'next-auth/next';
-import { NextResponse } from 'next/server';
 import { authOptions } from '../../pages/api/auth/[...nextauth]';
 import { handleFormData } from './controllers';
 
@@ -78,8 +77,7 @@ async function handler(req, res) {
     //   res.status(200).json(response);
     // }
   }
-  return NextResponse.json({});
-  // res.status(200).json({});
+  res.status(200).json({});
 }
 
 export default handler;
