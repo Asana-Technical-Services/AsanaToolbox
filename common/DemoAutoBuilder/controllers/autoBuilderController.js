@@ -1,13 +1,8 @@
 /* eslint-disable import/prefer-default-export */
 /* TODO: Remove above */
 import { getServerSession } from 'next-auth/next';
-import { NextResponse } from 'next/server';
 import { authOptions } from '../../../pages/api/auth/[...nextauth]';
 import { buildWorkGraph, submitOpenAiPrompt } from '../services';
-
-export const config = {
-  runtime: 'edge',
-};
 
 export async function handleFormData(req, res) {
   // const session = await getServerSession(req, res, authOptions);
@@ -65,7 +60,7 @@ export async function handleFormData(req, res) {
     Do not generate other text in your response aside from the JSON object itself. 
   `;
 
-  const response = res.waitUntil(submitOpenAiPrompt(promptMessage));
+  const response = await submitOpenAiPrompt(promptMessage);
   let parsedData;
   try {
     parsedData = JSON.parse(response);
@@ -77,8 +72,10 @@ export async function handleFormData(req, res) {
     return null;
   }
   console.log(JSON.stringify(parsedData));
-  const returnObject = res.waitUntil(
-    buildWorkGraph(accessToken, workspaceGid, parsedData)
+  const returnObject = await buildWorkGraph(
+    accessToken,
+    workspaceGid,
+    parsedData
   );
-  return NextResponse.json(returnObject);
+  return returnObject;
 }

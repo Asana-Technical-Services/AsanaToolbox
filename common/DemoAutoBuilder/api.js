@@ -3,10 +3,6 @@ import { getServerSession } from 'next-auth/next';
 import { authOptions } from '../../pages/api/auth/[...nextauth]';
 import { handleFormData } from './controllers';
 
-export const config = {
-  runtime: 'edge', // this is a pre-requisite
-};
-
 /* Initializing the cors middleware
 You can read more about the available options here: https://github.com/expressjs/cors#configuration-options
 */
@@ -29,6 +25,10 @@ async function applyCors(req, res, fn) {
 }
 
 async function handler(req, res) {
+  res.setHeader('Content-Type', 'text/event-stream');
+  res.setHeader('Cache-Control', 'no-cache');
+  res.setHeader('Connection', 'keep-alive');
+  res.write('data: Initializing...\n\n');
   let session;
   try {
     session = await getServerSession(req, res, authOptions);
@@ -45,21 +45,13 @@ async function handler(req, res) {
     res.status(404).send();
   }
   if (!reqData) {
-    // res.status(400).json({
-    //   error: 'Invalid request data sent',
-    //   data: reqData,
-    // });
-    return NextResponse.json({
+    res.status(400).json({
       error: 'Invalid request data sent',
       data: reqData,
     });
   }
   if (!session?.user?.gid) {
-    // res.status(400).json({
-    //   error: 'Invalid user session data',
-    //   data: session,
-    // });
-    return NextResponse.json({
+    res.status(400).json({
       error: 'Invalid user session data',
       data: session,
     });
@@ -71,13 +63,28 @@ async function handler(req, res) {
         reqData
       )}`
     );
-    const response = res.waitUntil(handleFormData(req, res));
-    return NextResponse.json(response);
-    // if (response) {
-    //   res.status(200).json(response);
-    // }
+    const response = await handleFormData(req, res));
+    if (response) {
+      res.status(200).json(response);
+    }
   }
-  res.status(200).json({});
+  const data = {
+    message: 'Server generated event data',
+    timestamp: new Date(),
+    body: response
+  };
+  const returnResponse = `data: ${JSON.stringify(data)}\n\n`;
+  console.log(`Server going to send event with payload: ${returnResponse}`)
+  
+  setInterval(() => {
+    res.write(returnResponse);
+  }, 5000);  // Push data every 5 seconds for example
+
+  req.on('close', () => {
+    clearInterval(this);
+    res.end();
+  });
+  // res.status(200).json({});
 }
 
 export default handler;
