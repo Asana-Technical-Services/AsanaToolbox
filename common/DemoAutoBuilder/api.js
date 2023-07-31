@@ -18,17 +18,12 @@ async function applyCors(req, res, fn) {
       if (result instanceof Error) {
         return reject(result);
       }
-
       return resolve(result);
     });
   });
 }
 
 async function handler(req, res) {
-  res.setHeader('Content-Type', 'text/event-stream');
-  res.setHeader('Cache-Control', 'no-cache');
-  res.setHeader('Connection', 'keep-alive');
-  res.write('data: Initializing...\n\n');
   let session;
   try {
     session = await getServerSession(req, res, authOptions);
@@ -58,6 +53,10 @@ async function handler(req, res) {
   }
   let response;
   if (route[1] === 'build') {
+    res.setHeader('Content-Type', 'text/event-stream');
+    res.setHeader('Cache-Control', 'no-cache');
+    res.setHeader('Connection', 'keep-alive');
+    res.write('data: Initializing...\n\n');
     console.log(
       `Triggering 'build' route endpoint with reqData: ${JSON.stringify(
         reqData
