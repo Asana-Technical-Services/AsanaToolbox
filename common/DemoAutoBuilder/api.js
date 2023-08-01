@@ -56,7 +56,7 @@ async function handler(req, res) {
     // res.setHeader('Content-Type', 'text/event-stream');
     // res.setHeader('Cache-Control', 'no-cache');
     // res.setHeader('Connection', 'keep-alive');
-    res.write('data: Initializing...\n\n');
+    // res.write('data: Initializing...\n\n');
     console.log(
       `Triggering 'build' route endpoint with reqData: ${JSON.stringify(
         reqData
@@ -79,10 +79,10 @@ async function handler(req, res) {
   //   res.write(returnResponse);
   // }, 5000); // Push data every 5 seconds for example
 
-  req.on('close', () => {
-    clearInterval(intervalId);
-    res.end();
-  });
+  // req.on('close', () => {
+  //   clearInterval(intervalId);
+  //   res.end();
+  // });
   // res.status(200).json({});
 }
 
