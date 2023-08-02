@@ -53,37 +53,23 @@ async function handler(req, res) {
   }
   let response;
   if (route[1] === 'build') {
-    // res.setHeader('Content-Type', 'text/event-stream');
-    // res.setHeader('Cache-Control', 'no-cache');
-    // res.setHeader('Connection', 'keep-alive');
-    // res.write('data: Initializing...\n\n');
     console.log(
       `Triggering 'build' route endpoint with reqData: ${JSON.stringify(
         reqData
       )}`
     );
+    res.status(200).json({
+      status: 'sending form data',
+      data: {},
+    });
     response = await handleFormData(req, res);
     if (response) {
       res.status(200).json(response);
     }
   }
-  const data = {
-    message: 'Server generated event data',
-    timestamp: new Date(),
-    body: response,
-  };
-  const returnResponse = `data: ${JSON.stringify(data)}\n\n`;
-  console.log(`Server going to send event with payload: ${returnResponse}`);
 
-  // const intervalId = setInterval(() => {
-  //   res.write(returnResponse);
-  // }, 5000); // Push data every 5 seconds for example
-
-  // req.on('close', () => {
-  //   clearInterval(intervalId);
-  //   res.end();
-  // });
-  // res.status(200).json({});
+  res.status(200).json({});
+  // res.end('completed\n');
 }
 
 export default handler;
