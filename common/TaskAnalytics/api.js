@@ -107,44 +107,33 @@ const api = async (req, res) => {
         console.log(item.Item);
         count += 1;
         await ddb
-          .put(
-            {
-              TableName: TableName,
-              Item: {
-                TrackerIDTaskID: TrackerIDTaskID,
-                Counter: count,
-                TrackerID: item.Item?.TrackerID,
-                TaskID: TaskID,
-              },
+          .put({
+            TableName: TableName,
+            Item: {
+              TrackerIDTaskID: TrackerIDTaskID,
+              Counter: count,
+              TrackerID: item.Item?.TrackerID,
+              TaskID: TaskID,
             },
-            function (err, data) {
-              if (err) {
-                console.log(err);
-                res.status(500);
-              } else {
-                console.log("data");
-                console.log(data);
-                res.json({
-                  template: "summary_with_details_v0",
-                  metadata: {
-                    title: item.Item?.TrackerID || "Analytics",
-                    fields: [
-                      {
-                        name: "View Count",
-                        text: `${count}`,
-                        type: "text_with_icon",
-                      },
-                    ],
-                    footer: {
-                      footer_type: "custom_text",
-                      text: "100% Certified Correct™",
-                    },
-                  },
-                });
-              }
-            }
-          )
+          })
           .promise();
+        res.json({
+          template: "summary_with_details_v0",
+          metadata: {
+            title: item.Item?.TrackerID || "Analytics",
+            fields: [
+              {
+                name: "View Count",
+                text: `${count}`,
+                type: "text_with_icon",
+              },
+            ],
+            footer: {
+              footer_type: "custom_text",
+              text: "100% Certified Correct™",
+            },
+          },
+        });
       } catch (error) {
         console.log("error!");
         console.log(error);
@@ -152,7 +141,7 @@ const api = async (req, res) => {
         return;
       }
     } else if (route[1] == "auth") {
-      res.status(200).send(`<!DOCTYPE html>
+      res.send(`<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
