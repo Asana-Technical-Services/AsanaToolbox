@@ -117,6 +117,8 @@ const api = async (req, res) => {
             },
           })
           .promise();
+
+        let footer_text = Math.floor(Math.random() * footer_phrases.length);
         res.json({
           template: "summary_with_details_v0",
           metadata: {
@@ -130,7 +132,7 @@ const api = async (req, res) => {
             ],
             footer: {
               footer_type: "custom_text",
-              text: "100% Certified Correct™",
+              text: footer_text,
             },
           },
         });
@@ -200,3 +202,16 @@ const api = async (req, res) => {
 };
 
 export default api;
+
+const footer_phrases = [
+  "[this app doesn't store anything other than view count]",
+  "Have a great day 😊",
+  "Brought to you by Asana App Components™",
+  "100% Certified Correct™",
+  "Nice!",
+  "🌴🦕",
+  "You're doing a great job!",
+  "❤️",
+  "Refreshing this page will artificially increase your view count",
+  "Remember to breathe and drink water",
+];
