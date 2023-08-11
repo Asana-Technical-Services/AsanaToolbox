@@ -24,7 +24,7 @@ export default function Component() {
 
   return (
     <div className="px-4 py-2 m-auto my-20 max-w-2xl flex flex-col content-center">
-      <h1>Task Analyics Summary</h1>
+      <h1>Task Analytics Summary</h1>
 
       <div>
         <div
