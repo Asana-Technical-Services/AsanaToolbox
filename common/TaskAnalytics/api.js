@@ -7,7 +7,6 @@ import { DynamoDB } from "aws-sdk";
 import { CountQueuingStrategy } from "node:stream/web";
 const REGION = "us-east-1"; //e.g. "us-east-1"
 const TableName = "AsanaToolboxTracker";
-console.log(authOptions);
 
 // Create the DynamoDB service object
 const ddb = new DynamoDB.DocumentClient({
@@ -38,7 +37,6 @@ async function applyCors(req, res, fn) {
 }
 
 const api = async (req, res) => {
-  console.log("here!");
   let session;
   try {
     session = await getServerSession(req, res, authOptions);
@@ -68,7 +66,7 @@ const api = async (req, res) => {
   [user_gid, workspace_gid] = [String(user_gid), String(workspace_gid)];
   //routes:  hi, rule-form, rule-submit,rule-run, get form, form-submit,
   if (route.length > 1) {
-    if (route[1] == "config") {
+    if (route[1] == "config" && session) {
       let Items = await ddb
         .scan({
           TableName: TableName,
@@ -122,11 +120,11 @@ const api = async (req, res) => {
             function (err, data) {
               if (err) {
                 console.log(err);
-                res.status(500).send();
+                res.status(500);
               } else {
                 console.log("data");
                 console.log(data);
-                res.status(200).json({
+                res.json({
                   template: "summary_with_details_v0",
                   metadata: {
                     title: item.Item?.TrackerID || "Analytics",
@@ -150,7 +148,7 @@ const api = async (req, res) => {
       } catch (error) {
         console.log("error!");
         console.log(error);
-        res.status(500).send();
+        res.status(500);
         return;
       }
     } else if (route[1] == "auth") {
@@ -171,7 +169,13 @@ const api = async (req, res) => {
     } else if (route[1] == "attach") {
       console.log(req.body);
       console.log("attach");
-      const dataJson = JSON.parse(req.body.data);
+      let dataJson = {};
+      try {
+        dataJson = JSON.parse(req.body.data);
+      } catch (e) {
+        console.log(e);
+      }
+
       const TaskID = dataJson.task;
       const TrackerID = dataJson.query;
       const TrackerIDTaskID = `${TaskID}`;
@@ -179,41 +183,30 @@ const api = async (req, res) => {
       console.log(TaskID);
       try {
         await ddb
-          .put(
-            {
-              TableName: TableName,
-              Item: {
-                TrackerIDTaskID: TrackerIDTaskID,
-                Counter: 0,
-                TrackerID: TrackerID,
-                TaskID: TaskID,
-              },
+          .put({
+            TableName: TableName,
+            Item: {
+              TrackerIDTaskID: TrackerIDTaskID,
+              Counter: 0,
+              TrackerID: TrackerID,
+              TaskID: TaskID,
             },
-            function (err, data) {
-              if (err) {
-                console.log(err);
-                res.status(500).send();
-              } else {
-                console.log("data");
-                console.log(data);
-                res.json({
-                  resource_name: TrackerID,
-                  resource_url:
-                    "https://asana-toolbox.vercel.app/apps/TaskAnalytics",
-                });
-              }
-            }
-          )
+          })
           .promise();
+
+        res.json({
+          resource_name: TrackerID,
+          resource_url: "https://asana-toolbox.vercel.app/apps/TaskAnalytics",
+        });
       } catch (error) {
         console.log("error!");
         console.log(error);
-        res.status(500).send();
+        res.status(500);
         return;
       }
     }
   } else {
-    res.status(200).send();
+    res.status(200);
   }
 };
 
