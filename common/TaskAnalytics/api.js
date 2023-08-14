@@ -88,10 +88,15 @@ const api = async (req, res) => {
       let TrackerID = req?.query?.attachment;
       let TaskID = req?.query?.task;
       let TrackerIDTaskID = `${TaskID}`;
+      let Timestamp = Date.now();
+      let User = req?.query?.user;
+      let TaskUserTimestamp = `${TaskID}${User}${Timestamp}`;
       console.log(TrackerID);
       console.log(TaskID);
       console.log(TrackerIDTaskID);
+      console.log(TaskUserTimestamp);
 
+      console.log(typeof TaskUserTimestamp);
       try {
         let item = await ddb
           .get({
@@ -106,19 +111,38 @@ const api = async (req, res) => {
         console.log(count);
         console.log(item.Item);
         count += 1;
-        await ddb
-          .put({
-            TableName: TableName,
-            Item: {
-              TrackerIDTaskID: TrackerIDTaskID,
-              Counter: count,
-              TrackerID: item.Item?.TrackerID,
-              TaskID: TaskID,
-            },
-          })
-          .promise();
 
-        let footer_text = Math.floor(Math.random() * footer_phrases.length);
+        try {
+          await Promise.all([
+            ddb
+              .put({
+                TableName: "AsanaToolboxTaskAnalyticsEvents",
+                Item: {
+                  TaskUserTimestamp: TaskUserTimestamp,
+                  UserID: User,
+                  Timestamp: String(Timestamp),
+                  TaskID: TaskID,
+                },
+              })
+              .promise(),
+            ddb
+              .put({
+                TableName: TableName,
+                Item: {
+                  TrackerIDTaskID: TrackerIDTaskID,
+                  Counter: count,
+                  TrackerID: item.Item?.TrackerID,
+                  TaskID: TaskID,
+                },
+              })
+              .promise(),
+          ]);
+        } catch (err) {
+          console.log(err);
+        }
+
+        let footer_text =
+          footer_phrases[Math.floor(Math.random() * footer_phrases.length)];
         res.json({
           template: "summary_with_details_v0",
           metadata: {
@@ -204,7 +228,7 @@ const api = async (req, res) => {
 export default api;
 
 const footer_phrases = [
-  "[this app doesn't store anything other than view count]",
+  "Submit feedback to go/ts",
   "Have a great day 😊",
   "Brought to you by Asana App Components™",
   "100% Certified Correct™",
@@ -212,6 +236,7 @@ const footer_phrases = [
   "🌴🦕",
   "You're doing a great job!",
   "❤️",
-  "Refreshing this page will artificially increase your view count",
+  "⚠️ Refreshing this page will artificially increase your view count",
   "Remember to breathe and drink water",
+  "🤙",
 ];
