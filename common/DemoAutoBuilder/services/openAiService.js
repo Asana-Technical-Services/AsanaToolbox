@@ -7,7 +7,7 @@ const openai = new OpenAIApi(configuration);
 // eslint-disable-next-line import/prefer-default-export
 export async function submitOpenAiPrompt(promptMessage) {
   const chatCompletion = await openai.createChatCompletion({
-    model: 'gpt-4',
+    model: 'gpt-3.5-turbo',
     messages: [{ role: 'user', content: promptMessage }],
   });
   const promptReturn = chatCompletion?.data?.choices[0]?.message?.content;
