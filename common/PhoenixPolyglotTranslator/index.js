@@ -11,7 +11,8 @@ export default function SplashPage() {
   const [selectedWorkspace, setSelectedWorkspace] = useState('');
   const [ready, setReady] = useState(false);
   const [workspaces, setAvailableWorkspaces] = useState([]);
-  const [responseMessage,setResponseMessage] = useState(null)
+  const [responseMessage,setResponseMessage] = useState(null);
+  const [notificationEmail,setNotificationEmail] = useState('');
 
   useEffect(() => {
     if (session && session.access_token) {
@@ -42,6 +43,7 @@ export default function SplashPage() {
       const response = await axios.post('/api/apps/PhoenixPolyglotTranslator', {
         sourceLanguage,
         targetLanguage,
+        email:notificationEmail,
         workspace: selectedWorkspace,
       });
 
@@ -84,6 +86,13 @@ export default function SplashPage() {
           value={targetLanguage}
           onChange={(e) => setTargetLanguage(e.target.value)}
           required
+          fullWidth
+          margin="normal"
+        />
+        <TextField
+          label="Notification Email"
+          value={notificationEmail}
+          onChange={(e) => setNotificationEmail(e.target.value)}
           fullWidth
           margin="normal"
         />

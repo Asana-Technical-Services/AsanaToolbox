@@ -16,8 +16,8 @@ export const authOptions = {
         return {
           id: profile.data.gid,
           gid: profile.data.gid,
-          name: profile.data?.name,
-          image: profile.data?.photo.image_128x128,
+          name: profile?.data?.name,
+          image: profile?.data?.photo?.image_128x128,
         };
       },
       clientId: process.env.NEXT_CLIENT_ID,
@@ -54,7 +54,7 @@ export const authOptions = {
           access_token: account.access_token,
           accessTokenExpires: Date.now() + account.expires_in,
           refresh_token: account.refresh_token,
-          picture: profile.data.photo.image_128x128,
+          picture: profile?.data?.photo?.image_128x128,
           gid: profile.data.gid,
         };
       }

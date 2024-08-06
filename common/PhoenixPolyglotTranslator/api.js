@@ -27,17 +27,15 @@ async function handler(req, res) {
   console.log("got token!")
 
   try {
-    const userResponse = await axios.get('https://app.asana.com/api/1.0/users/me', {
+    await axios.get('https://app.asana.com/api/1.0/users/me', {
       headers: {
         'Authorization': `Bearer ${token}`
       }
     });
     console.log("user response")
 
-    const user = userResponse.data.data;
-    const { email } = user;
 
-    const { sourceLanguage, targetLanguage, workspace } = req.body;
+    const { email, sourceLanguage, targetLanguage, workspace } = req.body;
 
     const payload = {
       sourceLanguage,
