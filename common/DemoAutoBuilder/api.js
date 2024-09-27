@@ -18,7 +18,6 @@ async function applyCors(req, res, fn) {
       if (result instanceof Error) {
         return reject(result);
       }
-
       return resolve(result);
     });
   });
@@ -52,19 +51,25 @@ async function handler(req, res) {
       data: session,
     });
   }
-
+  let response;
   if (route[1] === 'build') {
     console.log(
       `Triggering 'build' route endpoint with reqData: ${JSON.stringify(
         reqData
       )}`
     );
-    const response = await handleFormData(req, res);
+    res.status(200).json({
+      status: 'sending form data',
+      data: {},
+    });
+    response = await handleFormData(req, res);
     if (response) {
       res.status(200).json(response);
     }
   }
+
   res.status(200).json({});
+  // res.end('completed\n');
 }
 
 export default handler;
