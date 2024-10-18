@@ -4,6 +4,7 @@ import { Skeleton, Button, TextField, Select, MenuItem, FormControl, InputLabel 
 import axios from 'axios';
 import ServiceAccountInstructions from './components/ServiceAccountInstructions';
 
+
 export default function SplashPage() {
   const { data: session } = useSession();
 
@@ -13,8 +14,9 @@ export default function SplashPage() {
   const [ready, setReady] = useState(false);
   const [workspaces, setAvailableWorkspaces] = useState([]);
   const [responseMessage, setResponseMessage] = useState(null);
-  const [notificationEmail, setNotificationEmail] = useState('');
   const [serviceAccount, setServiceAccount] = useState('');
+
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (session && session.access_token) {
@@ -40,31 +42,33 @@ export default function SplashPage() {
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     setReady(false);
+    setIsLoading(true);
 
     try {
       const response = await axios.post('/api/apps/PhoenixPolyglotTranslator', {
         sourceLanguage,
         targetLanguage,
-        email: notificationEmail,
         workspace: selectedWorkspace,
         serviceAccount,
       });
 
       console.log('Response from server:', response.data);
-      setResponseMessage(response.data.message || 'Request submitted successfully! Translation is in progress');
-      setReady(true);
+      setResponseMessage(response.data.message || 'Your request has been submitted successfully! Translation is currently in progress. For smaller workspaces, this process may take up to 45 minutes, while larger workspaces may require up to 2 hours to complete.');
     } catch (error) {
       console.error('Error submitting form:', error);
       setResponseMessage(error.response?.data?.message || error.message || 'An error occurred while processing your request');
+    } finally {
       setReady(true);
+      setIsLoading(false);
+  
+      setTimeout(() => {
+        setResponseMessage(null);
+      }, 10000);
     }
-
-    setTimeout(() => {
-      setResponseMessage(null);
-    }, 10000);
   };
 
   return (
+
     <div className="px-4 py-2 m-auto my-20 max-w-2xl flex flex-col content-center">
       <div className="text-4xl w-auto">Phoenix Polyglot Translator</div>
       <br />
@@ -90,6 +94,8 @@ export default function SplashPage() {
       </div>
 
       <ServiceAccountInstructions selectedWorkspace={selectedWorkspace} />
+      <br />
+      <div className="mt-2 mb-4">If you have any questions please reach out to Brian Nguyen!</div>
 
       <form onSubmit={handleFormSubmit} className="mt-4">
         <TextField
@@ -136,10 +142,11 @@ export default function SplashPage() {
             ))}
           </Select>
         </FormControl>
-        <Button type="submit" disabled={!ready} fullWidth>
-          Submit
+        <Button type="submit" disabled={!ready || isLoading} fullWidth>
+          {isLoading ? 'Submitting request...' : 'Submit'}
         </Button>
       </form>
+
       {responseMessage && (
         <div className={`mt-4 p-2 ${responseMessage.toLowerCase().includes('error') ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}`}>
           {responseMessage}
