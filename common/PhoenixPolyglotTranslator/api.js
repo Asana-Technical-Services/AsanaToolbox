@@ -35,13 +35,14 @@ async function handler(req, res) {
     console.log("user response")
 
 
-    const { email, sourceLanguage, targetLanguage, workspace } = req.body;
+  const { email, sourceLanguage, targetLanguage, workspace, serviceAccount } = req.body;
 
     const payload = {
       sourceLanguage,
       targetLanguage,
       email,
       workspace,
+      serviceAccount,
       accessToken:token
     };
     console.log(payload)
