@@ -15,6 +15,9 @@ export default function SplashPage() {
   const [workspaces, setAvailableWorkspaces] = useState([]);
   const [responseMessage, setResponseMessage] = useState(null);
   const [serviceAccount, setServiceAccount] = useState('');
+  const [email, setEmail] = useState('');
+
+
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -50,22 +53,36 @@ export default function SplashPage() {
         targetLanguage,
         workspace: selectedWorkspace,
         serviceAccount,
+        email,
       });
 
       console.log('Response from server:', response.data);
       setResponseMessage(response.data.message || 'Your request has been submitted successfully! Translation is currently in progress. For smaller workspaces, this process may take up to 45 minutes, while larger workspaces may require up to 2 hours to complete.');
+
+      // Clear form fields after successful submission
+      setSourceLanguage('');
+      setTargetLanguage('');
+      setServiceAccount('');
+      setEmail('');
+    
+       // Set timeout for success message
+       setTimeout(() => {
+        setResponseMessage(null);
+      }, 30000);
+    
     } catch (error) {
       console.error('Error submitting form:', error);
       setResponseMessage(error.response?.data?.message || error.message || 'An error occurred while processing your request');
+      
+      // Set timeout for error message
+      setTimeout(() => {
+        setResponseMessage(null);
+      }, 20000);
     } finally {
       setReady(true);
       setIsLoading(false);
-  
-      setTimeout(() => {
-        setResponseMessage(null);
-      }, 10000);
     }
-  };
+};
 
   return (
 
@@ -126,6 +143,17 @@ export default function SplashPage() {
           fullWidth
           margin="normal"
           helperText="Enter the service account token with full permissions"
+        />
+        <TextField
+          label="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+          fullWidth
+          margin="normal"
+          placeholder="e.g., user@asana.com"
+          helperText="Enter your Asana email and join #phx-polyglot-notifications to receive notifications!"
+          type="email"
         />
         <FormControl fullWidth margin="normal">
           <InputLabel id="workspace-select-label">Workspace</InputLabel>
