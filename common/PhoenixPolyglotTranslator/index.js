@@ -72,12 +72,25 @@ export default function SplashPage() {
     
     } catch (error) {
       console.error('Error submitting form:', error);
-      setResponseMessage(error.response?.data?.message || error.message || 'An error occurred while processing your request');
+      let errorMessage;
+      
+      // Check for error response in different formats
+      if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      } else if (error.response?.data?.error) {
+        errorMessage = error.response.data.error;
+      } else if (error.message) {
+        errorMessage = error.message;
+      } else {
+        errorMessage = 'An error occurred while processing your request';
+      }
+      
+      setResponseMessage(errorMessage);
       
       // Set timeout for error message
       setTimeout(() => {
         setResponseMessage(null);
-      }, 20000);
+      }, 30000);
     } finally {
       setReady(true);
       setIsLoading(false);
